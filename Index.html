@@ -1,0 +1,1140 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Aprende a editar imagens com o GIMP: teoria, laboratórios interativos e aplicações diretas.">
+<title>LabDigital do Prof. João</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+ --paper:#eef1f5;--surface:#ffffff;--ink:#1c2130;--muted:#566073;--line:#d6dce5;--soft:#e6ecfb;
+ --accent:#2d56c8;--accent-hover:#2246a6;--on-accent:#ffffff;--ok:#1b7646;--warn:#a1450a;
+ --ui:#2a2e37;--ui-2:#333844;--ui-3:#464c5a;--ui-text:#e6e8ed;--ui-muted:#a9b0bd;--ui-accent:#8aa6ff;
+ --ck1:#c7cbd3;--ck2:#e9ebef;
+ --display:"Bricolage Grotesque",ui-sans-serif,system-ui,"Segoe UI",sans-serif;
+ --body:"Atkinson Hyperlegible",ui-sans-serif,system-ui,"Segoe UI",Arial,sans-serif;
+ color-scheme:light;
+ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){--paper:#15181f;--surface:#1e222b;--ink:#e7e9ef;--muted:#a3aab8;--line:#323846;--soft:#232c45;--accent:#86a2ff;--accent-hover:#a3b9ff;--on-accent:#111628;--ok:#5fd394;--warn:#ffa45c;color-scheme:dark}
+}
+:root[data-theme="dark"]{--paper:#15181f;--surface:#1e222b;--ink:#e7e9ef;--muted:#a3aab8;--line:#323846;--soft:#232c45;--accent:#86a2ff;--accent-hover:#a3b9ff;--on-accent:#111628;--ok:#5fd394;--warn:#ffa45c;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.04rem/1.6 var(--body)}
+h1,h2,h3,p{margin:0}
+h1,h2,h3{font-family:var(--display);line-height:1.12;letter-spacing:-.02em}
+h2{font-size:1.55rem;font-weight:700}
+h3{font-size:1.15rem;font-weight:700}
+a{color:var(--accent)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+kbd{font:700 .82em/1 var(--body);background:var(--soft);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:.18em .45em;white-space:nowrap}
+.checker{background-color:var(--ck2);background-image:conic-gradient(var(--ck1) 25%,transparent 0 50%,var(--ck1) 0 75%,transparent 0);background-size:16px 16px}
+
+.top{background:var(--surface);border-bottom:1px solid var(--line)}
+.top-inner{max-width:1200px;margin:auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:inline-flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:800 1.08rem var(--display)}
+.brand-mark{width:30px;height:30px;position:relative;border-radius:8px;background:#1b1e26;overflow:hidden}
+.brand-mark i{position:absolute;width:15px;height:15px;border-radius:50%;mix-blend-mode:screen}
+.brand-mark i:nth-child(1){background:#ff2a2a;left:4px;top:5px}.brand-mark i:nth-child(2){background:#22ff4a;left:11px;top:5px}.brand-mark i:nth-child(3){background:#2a5bff;left:7.5px;top:11px}
+.top .tag{color:var(--muted);font-size:.88rem}
+
+.wrap{max-width:1200px;margin:auto;padding:28px 24px 64px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(22px,4.5vw,56px)}
+.hero h1{font-size:clamp(2.5rem,6.2vw,4.6rem);font-weight:800;letter-spacing:-.035em;line-height:.98}
+.hero .sub{margin-top:14px;font:700 1.15rem var(--display);color:var(--muted)}
+.hero .intro{margin-top:14px;max-width:34em;font-size:1.08rem}
+.hero .actions{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.rgb{display:grid;grid-template-columns:minmax(0,1fr) 172px;background:var(--ui);color:var(--ui-text);border-radius:14px;overflow:hidden;box-shadow:0 18px 40px -24px #0b1020}
+.rgb-stage{position:relative;aspect-ratio:1/1;background:#14161c;isolation:isolate}
+.rgb-stage span{position:absolute;width:52%;aspect-ratio:1;border-radius:50%;mix-blend-mode:screen;transition:opacity .25s}
+.rgb-stage span.off{opacity:0}
+.rgb-stage .r{background:#ff0000;left:10%;top:12%}.rgb-stage .g{background:#00ff00;left:38%;top:12%}.rgb-stage .b{background:#0000ff;left:24%;top:38%}
+.rgb-panel{padding:10px;border-left:1px solid #1c1f26;display:flex;flex-direction:column;gap:4px;font-size:.86rem}
+.rgb-panel p{color:var(--ui-muted);font-size:.78rem;margin:0 2px 6px}
+.rgb-panel .note{margin-top:auto;font-size:.76rem;line-height:1.4}
+
+/* Home */
+.home-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:36px 0 14px}
+.home-title span{color:var(--muted);font-size:.92rem}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-content:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;color:var(--ink);text-decoration:none}
+.card:hover{border-color:var(--accent)}
+.card .n{grid-row:span 2;font:800 2.1rem/1 var(--display);color:var(--accent);min-width:1.4em}
+.card h3{margin-top:2px}
+.card p{color:var(--muted);font-size:.94rem}
+
+/* Chapter */
+.layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:26px;align-items:start}
+.side{position:sticky;top:18px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px}
+.side a{display:flex;gap:10px;align-items:baseline;padding:8px 10px;border-radius:9px;color:var(--ink);text-decoration:none;font-size:.92rem;line-height:1.3}
+.side a:hover,.side a[aria-current]{background:var(--soft)}
+.side a span{font:800 .85rem var(--display);color:var(--accent);min-width:1.2em}
+.side .home-link{font-weight:700;margin-bottom:4px}
+.chapter-head{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px}
+.chapter-no{color:var(--muted);font-size:.92rem}
+.chapter-head h1{font-size:clamp(1.9rem,4vw,2.9rem);font-weight:800;margin:4px 0 6px}
+.subtle{color:var(--muted)}
+.toc{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
+.toc button{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:4px 12px;font-size:.86rem}
+.toc button:hover{border-color:var(--accent)}
+.topic,.practice,.challenge{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;margin-top:14px;scroll-margin-top:16px}
+.topic>p{margin-top:8px;max-width:46em}
+.path{display:inline-block;margin-top:10px;font-size:.9rem;background:var(--soft);border-radius:8px;padding:4px 10px}
+.reference{margin-top:12px}
+.theory-note{padding:9px 12px;background:var(--soft);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;font-size:.95rem;max-width:46em}
+.theory-table{overflow-x:auto;margin-top:10px}
+.theory-table table{width:100%;border-collapse:separate;border-spacing:0;font-size:.92rem;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.theory-table th,.theory-table td{text-align:left;vertical-align:top;padding:7px 11px;border-bottom:1px solid var(--line)}
+.theory-table th{background:var(--soft);font-weight:700}
+.theory-table tr:last-child td{border-bottom:0}
+
+/* Buttons */
+.btn{display:inline-block;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 14px;font-weight:700;font-size:.94rem;text-decoration:none;line-height:1.3}
+.btn:hover{border-color:var(--accent)}
+.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+
+/* Lab (GIMP-like dark window) */
+.lab{margin-top:16px;background:var(--ui);color:var(--ui-text);border-radius:12px;overflow:hidden;border:1px solid #1b1e25}
+.lab:focus-visible{outline:3px solid var(--ui-accent);outline-offset:2px}
+.lab-bar{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:7px 12px;background:#20232b;font-size:.82rem;color:var(--ui-muted)}
+.lab-bar b{color:var(--ui-text);font-weight:700}
+.lab-main{display:grid;grid-template-columns:minmax(0,1fr) 236px}
+.lab-main.solo{grid-template-columns:minmax(0,1fr)}
+.stage{padding:12px;display:flex;align-items:flex-start;justify-content:center;min-width:0;overflow:auto;background:#3a3f4b}
+.panel{padding:12px;background:var(--ui-2);border-left:1px solid #1f2229;display:flex;flex-direction:column;gap:10px;font-size:.88rem;min-width:0}
+.panel h4{margin:0;font:700 .8rem var(--body);color:var(--ui-muted)}
+.panel label{display:grid;gap:3px}
+.panel .row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ui-btn{border:1px solid #1d2027;background:var(--ui-3);color:var(--ui-text);border-radius:7px;padding:5px 9px;font-size:.84rem;line-height:1.25}
+.ui-btn:hover{background:#525969}
+.ui-btn[aria-pressed="true"]{background:#3d5bb8;border-color:#7d9bff}
+.ui-btn.go{background:#3d5bb8;border-color:#5f7fe0}
+.ui-btn:disabled{opacity:.45;cursor:default}
+.lab input[type=range]{width:100%;accent-color:var(--ui-accent)}
+.lab input[type=number],.lab input[type=text],.lab select{background:#1f2229;border:1px solid #4a5160;border-radius:6px;padding:4px 7px;color:var(--ui-text);width:100%;min-width:0}
+.lab-status{margin:0;padding:9px 12px;background:#20232b;border-top:1px solid #1a1c22;font-size:.9rem;min-height:2.6em;color:var(--ui-text)}
+.lab-status.good{color:#8ef0b8}.lab-status.bad{color:#ffc08a}
+.view{display:block;width:100%;height:auto;max-width:560px;touch-action:none;box-shadow:0 0 0 1px #1a1c22}
+.pix{image-rendering:pixelated;image-rendering:crisp-edges}
+.stack{position:relative;width:100%;max-width:560px}
+.stack canvas+canvas{position:absolute;inset:0;pointer-events:none;box-shadow:none}
+.toolstrip{display:flex;flex-wrap:wrap;gap:4px}
+.tool{width:38px;height:38px;display:grid;place-items:center;border:1px solid transparent;background:transparent;color:var(--ui-text);border-radius:7px;padding:0}
+.tool:hover{background:var(--ui-3)}
+.tool[aria-pressed="true"]{background:#3d5bb8;border-color:#7d9bff}
+.tool svg{width:22px;height:22px}
+.tool.flash{animation:flash .6s}
+@keyframes flash{0%{background:#ffd23f;color:#1c2130}100%{background:transparent}}
+.colors{position:relative;width:62px;height:52px}
+.colors input[type=color]{position:absolute;width:36px;height:30px;padding:0;border:2px solid #111;border-radius:3px;background:none;cursor:pointer}
+.colors .fg{left:0;top:0;z-index:2}.colors .bg{left:20px;top:18px}
+.colors input::-webkit-color-swatch-wrapper{padding:0}.colors input::-webkit-color-swatch{border:0}
+.colors input::-moz-color-swatch{border:0}
+.hist{list-style:none;margin:0;padding:0;max-height:180px;overflow:auto;background:#1f2229;border-radius:6px}
+.hist button{width:100%;text-align:left;border:0;background:none;padding:4px 8px;font-size:.84rem;color:var(--ui-text)}
+.hist button.cur{background:#3d5bb8}
+.hist button.future{color:#7d8494}
+.layers{list-style:none;margin:0;padding:0;background:#1f2229;border-radius:6px;overflow:hidden}
+.layers li{display:flex;align-items:center;gap:7px;padding:4px 6px;border-bottom:1px solid #2a2e37;cursor:pointer}
+.layers li.on{background:#3d5bb8}
+.layers li canvas{width:40px;height:27px;border:1px solid #111;flex:none}
+.layers li .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layers li .nm.bold{font-weight:700}
+.eye{width:26px;height:26px;display:grid;place-items:center;border:0;background:none;color:var(--ui-text);padding:0;border-radius:5px;flex:none}
+.eye[aria-pressed="false"] svg{opacity:.2}
+.eye svg{width:18px;height:18px}
+.rgb-panel .layers li{background:transparent}
+.swatch{height:84px;border-radius:8px;border:1px solid #111}
+.hex{font:700 1.15rem var(--display);letter-spacing:.02em}
+.props{width:100%;border-collapse:collapse;font-size:.84rem}
+.props td{padding:4px 2px;border-bottom:1px solid #444a57;vertical-align:top}
+.props td:last-child{text-align:right;font-weight:700}
+.bar{height:10px;background:#1f2229;border-radius:5px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ui-accent);transition:width .25s}
+
+/* Interface mock */
+.mock{display:grid;grid-template-columns:118px minmax(0,1fr) 128px;grid-template-rows:auto 1fr auto auto;gap:3px;background:#1a1c22;padding:3px;border-radius:6px;width:100%;max-width:640px;font-size:.72rem;user-select:none}
+.zone{background:var(--ui-2);border:2px solid transparent;border-radius:4px;padding:5px;cursor:pointer;color:var(--ui-muted);min-width:0}
+.zone:hover{border-color:#6f8cff}
+.zone.found{border-color:#56d48e}
+.zone.wrong{border-color:#ff9a4d}
+.z-menu{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:2px 10px;color:var(--ui-text)}
+.z-tools{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;align-content:start}
+.z-tools i{aspect-ratio:1;background:#4a5060;border-radius:3px}
+.z-tools i.fgbg{grid-column:span 2;background:linear-gradient(135deg,#000 50%,#fff 50%);border:1px solid #111}
+.z-options{grid-column:1}
+.z-options div{height:9px;background:#4a5060;border-radius:3px;margin-top:6px}
+.z-canvas{grid-row:2/4;grid-column:2;display:grid;place-items:center;background:#3a3f4b;padding:10px}
+.z-canvas canvas{width:100%;max-width:300px;height:auto;pointer-events:none}
+.z-layers{grid-row:2/4;grid-column:3}
+.z-layers div{display:flex;gap:4px;align-items:center;margin-top:5px}
+.z-layers div i{width:22px;height:15px;background:#5b6272;border:1px solid #111;flex:none}
+.z-status{grid-column:1/-1;color:var(--ui-muted)}
+.mission{font:700 1rem var(--display);color:#fff}
+
+/* Practice */
+.practice-head{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.quiz{border-top:1px solid var(--line);padding:16px 0 4px;margin-top:12px}
+.quiz fieldset{border:0;padding:0;margin:8px 0;min-width:0}
+.quiz legend{font-weight:700;margin-bottom:6px;max-width:44em}
+.choices{display:flex;flex-wrap:wrap;gap:7px}
+.choices label{display:flex;gap:7px;align-items:center;border:1px solid var(--line);border-radius:9px;padding:6px 11px;cursor:pointer}
+.choices label:has(:checked){background:var(--soft);border-color:var(--accent)}
+.feedback{margin-top:8px;font-size:.95rem}
+.feedback.ok{color:var(--ok)}.feedback.retry{color:var(--warn)}
+.challenge ol{margin:10px 0 0;padding-left:1.4em;max-width:46em}
+.challenge li{margin:6px 0}
+.chapter-nav{display:flex;justify-content:space-between;gap:8px;margin-top:20px}
+.mobile-nav{display:none}
+footer{padding:20px 24px;text-align:center;color:var(--muted);font-size:.86rem;border-top:1px solid var(--line)}
+
+@media(max-width:980px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr}.rgb{max-width:520px}}
+@media(max-width:860px){.lab-main{grid-template-columns:minmax(0,1fr)}.panel{border-left:0;border-top:1px solid #1f2229}}
+@media(max-width:760px){
+ .wrap{padding:16px 12px 40px}.top-inner{padding:10px 14px}.top .tag{display:none}
+ .layout{display:block}.side{display:none}
+ .mobile-nav{display:block;width:100%;padding:9px;border:1px solid var(--line);border-radius:10px;margin-bottom:12px;background:var(--surface);color:var(--ink)}
+ .grid{grid-template-columns:1fr}
+ .chapter-head,.topic,.practice,.challenge{padding:16px}
+ .mock{grid-template-columns:84px minmax(0,1fr) 92px;font-size:.62rem}
+ .rgb{grid-template-columns:minmax(0,1fr) 140px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-inner">
+ <a class="brand" href="#inicio"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>LabDigital do Prof. João</a>
+ <span class="tag">TIC: edição de imagem com o GIMP</span>
+</div></header>
+<main id="app" class="wrap"></main>
+<footer>LabDigital do Prof. João. Os nomes dos menus seguem o GIMP 3 em português e podem variar ligeiramente de versão para versão.</footer>
+
+<script>
+/* ===================== CONTEÚDO ===================== */
+const chapters=[
+{title:"Conhecer o GIMP",desc:"A janela, as ferramentas, desfazer e guardar.",
+ topics:[
+  {title:"A janela do GIMP",theory:"O GIMP é um programa gratuito para editar imagens: retocar fotografias, fazer montagens, criar cartazes e desenhar. Funciona em Windows, macOS e Linux. Quando o abres, encontras cinco zonas principais. Cumpre as missões para as descobrires.",lab:"interface",
+   ref:{headers:["Zona","Para que serve"],rows:[["Barra de menus","Todos os comandos: Ficheiro, Imagem, Cores, Filtros…"],["Caixa de ferramentas","Seleções, pintura, texto, transformações."],["Opções da ferramenta","Definições da ferramenta escolhida, como o tamanho."],["Janela da imagem","A imagem que estás a editar."],["Painel Camadas","As camadas da imagem, de cima para baixo."]],code:[],note:"Se os painéis desaparecerem, carrega em Tab: esta tecla esconde e volta a mostrar os painéis."}},
+  {title:"Escolher ferramentas com o teclado",theory:"Cada ferramenta tem uma tecla de atalho. Carregar na tecla é mais rápido do que procurar o ícone. Na caixa de ferramentas, algumas ferramentas estão agrupadas num só ícone; abre o grupo para veres as outras. Clica no laboratório e carrega nas teclas pedidas.",lab:"shortcuts",
+   ref:{headers:["Ferramenta","Atalho"],rows:[["Seleção retangular / elíptica","R / E"],["Seleção livre / difusa","F / U"],["Recortar / Escalar","Shift+C / Shift+S"],["Mover / Texto","M / T"],["Pincel / Lápis / Borracha","P / N / Shift+E"],["Balde de tinta / Gradiente","Shift+B / G"]],code:[1]}},
+  {title:"Desfazer e refazer",theory:"Enganaste-te? Ctrl+Z desfaz o último passo e Ctrl+Y refaz. O painel Histórico de desfazer (Editar > Histórico de desfazer) mostra todos os passos: clica num deles para voltar a esse momento. Pinta alguns traços e experimenta.",lab:"paint",cfg:{tools:["brush"],base:"scene",history:true,fg:"#ffd23f"},
+   ref:{headers:["Ação","Atalho"],rows:[["Desfazer","Ctrl+Z"],["Refazer","Ctrl+Y"]],code:[1]}},
+  {title:"Guardar ou exportar",theory:"Ficheiro > Guardar cria um ficheiro .xcf, o formato do GIMP: guarda as camadas e o texto editável para continuares mais tarde. Para usar a imagem noutro sítio (Teams, um site, uma apresentação), usa Ficheiro > Exportar como e escolhe PNG ou JPEG. Compara os três formatos.",lab:"formats",
+   ref:{headers:["Ação","Menu","Atalho"],rows:[["Guardar o projeto (.xcf)","Ficheiro > Guardar","Ctrl+S"],["Exportar (PNG, JPEG…)","Ficheiro > Exportar como","Shift+Ctrl+E"]],code:[2]}}
+ ],
+ quizzes:[
+  {q:"Queres continuar o trabalho amanhã, com todas as camadas. Em que formato guardas?",options:[".xcf",".jpg",".png"],correct:0,why:"Só o .xcf guarda as camadas e o texto editável. PNG e JPEG juntam tudo numa só imagem."},
+  {q:"Que tecla escolhe o Pincel?",options:["B","P","N"],correct:1,why:"P de Pincel. O N escolhe o Lápis."},
+  {q:"Os painéis desapareceram todos. O que experimentas primeiro?",options:["Reinstalar o GIMP","Carregar em Tab","Fechar a imagem"],correct:1,why:"A tecla Tab esconde e volta a mostrar os painéis."}
+ ],
+ challenge:["Abre o GIMP e cria uma imagem nova com Ficheiro > Novo (Ctrl+N), com 800 × 600 píxeis.","Escolhe o Pincel com a tecla P e escreve o teu nome à mão.","Desfaz o último traço com Ctrl+Z e refaz com Ctrl+Y.","Guarda como nome_turma.xcf e exporta uma cópia em PNG."]
+},
+{title:"Píxeis, tamanho e recorte",desc:"Do que é feita uma imagem e como mudar o seu tamanho.",
+ topics:[
+  {title:"Uma imagem é feita de píxeis",theory:"Uma fotografia digital é uma grelha de quadradinhos de cor: os píxeis. Esta imagem tem 360 × 240 píxeis, ou seja, 86 400 quadradinhos. Amplia-a até veres cada um e passa o rato por cima para saberes a sua cor.",lab:"zoom",
+   ref:{headers:["Ação","Atalho"],rows:[["Ampliar","+"],["Reduzir","-"],["Ver a 100 %","1"],["Ajustar à janela","Shift+Ctrl+J"]],code:[1]}},
+  {title:"A cor de cada píxel",theory:"Cada píxel guarda três valores entre 0 e 255: vermelho (R), verde (G) e azul (B). Misturados, dão todas as cores que o ecrã mostra. O GIMP também escreve a cor num código hexadecimal, como #FF0000.",lab:"rgb",
+   ref:{note:"No GIMP, clica na cor de frente (o quadrado de cima, por baixo das ferramentas) para veres e mudares estes valores."}},
+  {title:"Mudar o tamanho da imagem",theory:"Imagem > Escalar imagem muda a largura e a altura. Com a corrente fechada, o GIMP mantém as proporções e a imagem não fica esticada. Reduzir é seguro; ampliar muito deixa a imagem desfocada, porque o GIMP tem de inventar píxeis.",lab:"scale",path:"Imagem > Escalar imagem"},
+  {title:"Recortar",theory:"A ferramenta Recortar (Shift+C) corta tudo o que fica fora do retângulo. Arrasta sobre a imagem para escolher a zona e carrega em Enter para aplicar.",lab:"crop",
+   ref:{headers:["Ação","Atalho"],rows:[["Ferramenta Recortar","Shift+C"],["Aplicar o recorte","Enter"],["Cancelar","Esc"]],code:[1]}},
+  {title:"Rodar e espelhar",theory:"Uma fotografia do telemóvel ficou deitada? Em Imagem > Transformar podes rodar a imagem 90° ou 180° e espelhá-la na horizontal ou na vertical.",lab:"transform",path:"Imagem > Transformar"}
+ ],
+ quizzes:[
+  {q:"Uma imagem tem 1000 × 500 píxeis. Escalas para 500 de largura com a corrente fechada. Com que altura fica?",options:["250","500","1000"],correct:0,why:"Com a corrente fechada a proporção mantém-se: metade da largura, metade da altura."},
+  {q:"Que cor dá R = 255, G = 255, B = 0?",options:["Amarelo","Branco","Ciano"],correct:0,why:"Vermelho e verde no máximo, sem azul, dá amarelo no ecrã."},
+  {q:"Uma fotografia pequena foi ampliada para o dobro. O que acontece?",options:["Fica mais nítida","Fica desfocada","Fica igual"],correct:1,why:"O GIMP inventa os píxeis que faltam, por isso a imagem perde nitidez."}
+ ],
+ challenge:["Abre uma fotografia tua ou uma imagem com licença livre.","Recorta-a com Shift+C para ficar só o essencial.","Usa Imagem > Escalar imagem para ficar com 800 píxeis de largura, com a corrente fechada.","Exporta em JPEG com Ficheiro > Exportar como."]
+},
+{title:"Seleções",desc:"Escolhe a parte da imagem que queres alterar.",
+ topics:[
+  {title:"Para que serve uma seleção",theory:"Quando há uma seleção, o GIMP só altera o que está lá dentro. A seleção aparece rodeada por uma linha tracejada que se mexe, a que se chama «formigas em marcha». Seleciona uma zona e experimenta Dessaturar ou Apagar.",lab:"select",cfg:{tools:["rect"]},
+   ref:{note:"Sem nenhuma seleção, as ações aplicam-se à camada inteira."}},
+  {title:"Seleção retangular e elíptica",theory:"R escolhe a Seleção retangular e E a Seleção elíptica. Arrasta de um canto ao outro. Se carregares em Shift depois de começares a arrastar, obténs um quadrado ou um círculo.",lab:"select",cfg:{tools:["rect","ellipse"]}},
+  {title:"Seleção livre (laço)",theory:"F escolhe a Seleção livre. Arrasta à volta de um objeto para o contornar. No GIMP também podes clicar ponto a ponto e carregar em Enter para fechar a seleção.",lab:"select",cfg:{tools:["free"]}},
+  {title:"Seleção difusa e seleção por cor",theory:"A Seleção difusa (U), a «varinha mágica», seleciona os píxeis vizinhos com cor parecida àquela onde clicas. O Limiar diz quão parecida tem de ser: um limiar maior apanha mais píxeis. Selecionar por cor (Shift+O) apanha essa cor em toda a imagem, mesmo em zonas separadas.",lab:"select",cfg:{tools:["fuzzy","bycolor"]}},
+  {title:"Juntar, tirar e inverter",theory:"Com Shift carregado antes de clicar, a nova seleção junta-se à que já existe. Com Ctrl, é retirada. Ctrl+I inverte a seleção (fica selecionado o que estava de fora) e Shift+Ctrl+A tira a seleção.",lab:"select",cfg:{tools:["rect","ellipse","free","fuzzy","bycolor"],modes:true},
+   ref:{headers:["Ação","Atalho"],rows:[["Juntar à seleção","Shift (antes de clicar)"],["Tirar da seleção","Ctrl (antes de clicar)"],["Selecionar tudo","Ctrl+A"],["Inverter a seleção","Ctrl+I"],["Não selecionar nada","Shift+Ctrl+A"],["Preencher com a cor de frente","Ctrl+,"]],code:[1]}}
+ ],
+ quizzes:[
+  {q:"Selecionaste o céu e carregaste em Delete. O que acontece?",options:["Apaga-se só o céu","Apaga-se a imagem toda","Não acontece nada"],correct:0,why:"Com uma seleção ativa, as ações só afetam a zona selecionada."},
+  {q:"A varinha mágica apanha muito pouco céu. O que fazes?",options:["Aumento o limiar","Diminuo o limiar","Mudo para o Lápis"],correct:0,why:"Um limiar maior aceita cores menos parecidas e apanha mais píxeis."},
+  {q:"Selecionaste a casa. Como selecionas tudo menos a casa?",options:["Ctrl+I","Ctrl+A","Shift+Ctrl+A"],correct:0,why:"Ctrl+I inverte a seleção. Ctrl+A seleciona tudo e Shift+Ctrl+A tira a seleção."}
+ ],
+ challenge:["Abre uma fotografia com céu.","Com a Seleção difusa (U), seleciona o céu. Usa Shift para juntar as zonas que faltarem.","Carrega em Ctrl+I e depois usa Cores > Dessaturar > Dessaturar: fica tudo a preto e branco menos o céu.","Tira a seleção com Shift+Ctrl+A e exporta o resultado."]
+},
+{title:"Camadas",desc:"Empilha imagens como folhas transparentes.",
+ topics:[
+  {title:"O que são camadas",theory:"As camadas são como folhas de acetato empilhadas. Cada uma pode ter partes transparentes, por onde se vê a de baixo. O olho, no painel Camadas, mostra ou esconde cada camada. Experimenta esconder e mostrar.",lab:"layers",cfg:{}},
+  {title:"A ordem das camadas",theory:"A camada que está mais acima no painel aparece à frente na imagem. As camadas deste exemplo estão baralhadas: usa as setas para subir e descer até a imagem ficar certa.",lab:"layers",cfg:{puzzle:true},
+   ref:{headers:["Ação","Como"],rows:[["Nova camada","Shift+Ctrl+N"],["Duplicar camada","Shift+Ctrl+D"],["Abrir imagem como camada","Ficheiro > Abrir como camadas"],["Subir ou descer","Setas no fundo do painel Camadas"]],code:[]}},
+  {title:"Opacidade e modo",theory:"A Opacidade diz quanto se vê de uma camada: 100 é totalmente visível e 0 é invisível. O Modo muda a forma como a camada se mistura com as de baixo: Multiplicar escurece e Ecrã clareia. Liga a camada Pôr do sol e experimenta.",lab:"layers",cfg:{sunset:true}},
+  {title:"Transparência e canal alfa",theory:"Para ter partes transparentes, uma camada precisa de canal alfa. Sem ele, a Borracha pinta com a cor de fundo em vez de apagar. Para o adicionar: Camada > Transparência > Adicionar canal alfa. No painel Camadas, o nome de uma camada sem canal alfa aparece a negrito.",lab:"alpha",path:"Camada > Transparência > Adicionar canal alfa"}
+ ],
+ quizzes:[
+  {q:"O texto está escondido atrás da fotografia. O que fazes?",options:["Subo a camada do texto","Aumento a opacidade da fotografia","Apago o texto"],correct:0,why:"A camada mais acima no painel aparece à frente."},
+  {q:"Uma camada com opacidade 0 fica…",options:["invisível","preta","igual"],correct:0,why:"Opacidade 0 significa que não se vê nada dessa camada."},
+  {q:"A Borracha pinta de branco em vez de apagar. Porquê?",options:["A camada não tem canal alfa","O pincel é demasiado grande","A imagem é JPEG"],correct:0,why:"Sem canal alfa não há transparência. Adiciona-o em Camada > Transparência > Adicionar canal alfa."}
+ ],
+ challenge:["Abre uma fotografia para servir de fundo.","Usa Ficheiro > Abrir como camadas para juntar uma segunda imagem.","Adiciona canal alfa à segunda imagem e apaga o fundo dela com a Borracha.","Escreve uma mensagem com a ferramenta Texto e baixa a opacidade de uma camada.","Guarda em .xcf e exporta em PNG."]
+},
+{title:"Cor e ajustes",desc:"Corrige e transforma as cores de uma fotografia.",
+ topics:[
+  {title:"Brilho e contraste",theory:"O brilho torna a imagem mais clara ou mais escura. O contraste aumenta ou diminui a diferença entre as zonas claras e as escuras.",lab:"adjust",cfg:{controls:["bc"]},path:"Cores > Brilho-Contraste"},
+  {title:"Matiz e saturação",theory:"A matiz roda as cores: o azul pode passar a verde ou a roxo. A saturação controla a intensidade: no mínimo, a imagem fica cinzenta; no máximo, as cores ficam muito vivas.",lab:"adjust",cfg:{controls:["hs"]},path:"Cores > Matiz-Saturação"},
+  {title:"Preto e branco e negativo",theory:"Dessaturar passa a imagem para tons de cinzento. Inverter troca cada cor pela sua oposta, como um negativo: o branco passa a preto e o azul passa a laranja.",lab:"adjust",cfg:{controls:["desat","invert"]},path:"Cores > Dessaturar > Dessaturar e Cores > Inverter"},
+  {title:"Limiar",theory:"O Limiar transforma a imagem em preto e branco puro, sem cinzentos. Os píxeis mais claros do que o valor escolhido ficam brancos e os outros ficam pretos. É útil para preparar desenhos e carimbos.",lab:"adjust",cfg:{controls:["threshold"]},path:"Cores > Limiar",
+   ref:{note:"Todos estes ajustes se aplicam só à camada ativa e, se houver seleção, só à zona selecionada."}}
+ ],
+ quizzes:[
+  {q:"Uma fotografia ficou escura e sem vida. Que menu usas primeiro?",options:["Cores > Brilho-Contraste","Filtros > Desfocar","Imagem > Escalar imagem"],correct:0,why:"Brilho e contraste corrigem fotografias escuras ou apagadas."},
+  {q:"Com a saturação no mínimo, a imagem fica…",options:["em tons de cinzento","com cores mais vivas","invertida"],correct:0,why:"Sem saturação, as cores perdem toda a intensidade."},
+  {q:"Depois de Cores > Inverter, um píxel branco fica…",options:["preto","branco","cinzento"],correct:0,why:"Inverter troca cada cor pela oposta: 255 passa a 0."}
+ ],
+ challenge:["Abre uma fotografia de um dia nublado.","Melhora-a com Cores > Brilho-Contraste.","Duplica a camada (Shift+Ctrl+D) e dessatura a cópia.","Adiciona canal alfa à cópia e, com a Borracha, deixa ver a cor só num objeto."]
+},
+{title:"Pintar, escrever e filtros",desc:"Pincel, balde, texto e efeitos prontos.",
+ topics:[
+  {title:"Cor de frente e cor de fundo",theory:"Por baixo das ferramentas há dois quadrados: a cor de frente, usada pelo Pincel e pelo Lápis, e a cor de fundo. D repõe preto e branco e X troca as duas. Clica num quadrado para escolher outra cor.",lab:"paint",cfg:{tools:["brush","pencil"],base:"white"},
+   ref:{headers:["Ação","Atalho"],rows:[["Repor preto e branco","D"],["Trocar frente e fundo","X"],["Pincel mais pequeno / maior","[ / ]"]],code:[1]}},
+  {title:"Pincel, Lápis e Borracha",theory:"O Pincel (P) faz traços de bordas suaves. O Lápis (N) faz traços de bordas duras, ótimos para pixel art. A Borracha (Shift+E) apaga. Para uma linha reta, clica no início, carrega em Shift e clica no fim.",lab:"paint",cfg:{tools:["brush","pencil","eraser"],base:"scene"}},
+  {title:"Balde de tinta e Gradiente",theory:"O Balde de tinta (Shift+B) pinta de uma só vez uma zona fechada com a cor de frente. O Gradiente (G) faz uma passagem suave da cor de frente para a cor de fundo: arrasta para indicar a direção. Pinta o desenho.",lab:"paint",cfg:{tools:["bucket","brush","gradient"],base:"line"},
+   ref:{note:"Sem seleção, o Gradiente preenche a camada toda. Para o usar só numa zona, seleciona-a primeiro."}},
+  {title:"Texto",theory:"Com a ferramenta Texto (T), clica na imagem e escreve. Cada texto fica numa camada própria, com o nome do que escreveste, e podes mudá-lo mais tarde. Para mudar o texto de sítio, usa a ferramenta Mover (M).",lab:"text"},
+  {title:"Filtros",theory:"Os filtros aplicam efeitos prontos. A Desfocagem gaussiana suaviza a imagem. Pixelizar transforma uma zona em quadrados grandes, o que serve para esconder caras, números de porta ou matrículas antes de publicar uma fotografia. Arrasta para escolher a zona do número da porta.",lab:"filter",
+   ref:{headers:["Filtro","Menu"],rows:[["Desfocagem gaussiana","Filtros > Desfocar > Desfocagem gaussiana"],["Pixelizar","Filtros > Desfocar > Pixelizar"]],code:[]}}
+ ],
+ quizzes:[
+  {q:"Carregaste em D e depois em X. Qual é a cor de frente?",options:["Branco","Preto","Vermelho"],correct:0,why:"D põe preto à frente e branco no fundo. X troca as duas."},
+  {q:"Queres pintar de uma só vez o interior de uma janela fechada. Que ferramenta usas?",options:["Balde de tinta","Borracha","Seleção elíptica"],correct:0,why:"O Balde de tinta preenche a zona fechada onde clicas."},
+  {q:"Vais publicar uma fotografia onde se vê a matrícula de um carro. O que fazes?",options:["Seleciono a matrícula e aplico Pixelizar","Aumento o contraste","Exporto em PNG"],correct:0,why:"Pixelizar esconde informação privada antes de publicares."}
+ ],
+ challenge:["Cria uma imagem nova com 1080 × 1350 píxeis para um cartaz de um evento da escola.","Pinta o fundo com o Gradiente (G).","Escreve o título com a ferramenta Texto; repara que cada texto fica numa camada.","Junta uma fotografia e pixeliza qualquer informação privada.","Exporta em PNG e entrega no Teams."]
+}
+];
+
+/* ===================== UTILITÁRIOS ===================== */
+const app=document.getElementById('app');
+const saved={};
+let cleanups=[];
+const onCleanup=f=>cleanups.push(f);
+const h=(tag,opts={},...children)=>{
+ const el=document.createElement(tag);
+ for(const [k,v] of Object.entries(opts)){
+  if(v===null||v===undefined||v===false)continue;
+  if(k==='class')el.className=v;
+  else if(k.startsWith('on'))el.addEventListener(k.slice(2),v);
+  else el.setAttribute(k,String(v));
+ }
+ for(const c of children.flat(Infinity))if(c!==null&&c!==undefined&&c!==false)el.append(c);
+ return el;
+};
+const clamp=(v,a,b)=>v<a?a:v>b?b:v;
+const SW=360,SH=240;
+const num=i=>String(i+1);
+const hash=i=>'#capitulo-'+(i+1);
+const navlink=(href,text,cls='btn')=>h('a',{href,class:cls},text);
+function canvas(w=SW,hh=SH,cls='view'){const c=document.createElement('canvas');c.width=w;c.height=hh;if(cls)c.className=cls;return c;}
+function ctx2(c){return c.getContext('2d',{willReadFrequently:true});}
+function status(t){return h('p',{class:'lab-status','aria-live':'polite'},t);}
+function say(el,t,kind=''){el.textContent=t;el.className='lab-status'+(kind?' '+kind:'');}
+function pos(e,cv){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*cv.width/r.width,y:(e.clientY-r.top)*cv.height/r.height};}
+function drag(cv,{down,move,up}){
+ cv.addEventListener('pointerdown',e=>{
+  if(e.pointerType==='mouse'&&e.button!==0)return;
+  e.preventDefault();
+  cv.closest('.lab')?.focus({preventScroll:true});
+  cv.setPointerCapture(e.pointerId);
+  down?.(pos(e,cv),e);
+  const mv=ev=>move?.(pos(ev,cv),ev);
+  const u=ev=>{cv.removeEventListener('pointermove',mv);cv.removeEventListener('pointerup',u);cv.removeEventListener('pointercancel',u);up?.(pos(ev,cv),ev);};
+  cv.addEventListener('pointermove',mv);cv.addEventListener('pointerup',u);cv.addEventListener('pointercancel',u);
+ });
+}
+function combo(e){
+ let k=e.key;
+ if(k==='+'||k==='=')return'+';
+ if(k==='-')return'-';
+ if(e.code&&e.code.startsWith('Key'))k=e.code.slice(3);
+ else if(e.code&&e.code.startsWith('Digit'))k=e.code.slice(5);
+ else if(k.length===1)k=k.toUpperCase();
+ const p=[];
+ if(e.shiftKey&&!['Shift'].includes(k))p.push('Shift');
+ if(e.ctrlKey||e.metaKey)p.push('Ctrl');
+ return [...p,k].join('+');
+}
+function keys(root,handler){
+ root.addEventListener('keydown',e=>{
+  if(e.target.matches('input[type=text],input[type=number],textarea,select'))return;
+  if(handler(combo(e),e))e.preventDefault();
+ });
+}
+function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const hex2=v=>v.toString(16).padStart(2,'0').toUpperCase();
+const toHex=(r,g,b)=>'#'+hex2(r)+hex2(g)+hex2(b);
+function parseHex(s){return[parseInt(s.slice(1,3),16),parseInt(s.slice(3,5),16),parseInt(s.slice(5,7),16)];}
+
+/* ---------- Ícones ---------- */
+const ICON={
+ rect:'<rect x="4" y="5" width="16" height="14" stroke-dasharray="3 2"/>',
+ ellipse:'<ellipse cx="12" cy="12" rx="8.5" ry="6.5" stroke-dasharray="3 2"/>',
+ free:'<path d="M7 16c-4-3-2-10 5-10s8 6 3 8-7-1-8 2" stroke-dasharray="3 2"/><path d="M8 18l-2 3"/>',
+ fuzzy:'<path d="M4 20 14 10"/><path d="M17 2v3M17 9v3M13 7h-3M24 7h-3M19.5 4.5l1.5-1.5M19.5 9.5l1.5 1.5"/>',
+ bycolor:'<rect x="3" y="3" width="8" height="8" stroke-dasharray="2 2"/><rect x="13" y="13" width="8" height="8" stroke-dasharray="2 2"/><circle cx="7" cy="7" r="1.6" fill="currentColor"/><circle cx="17" cy="17" r="1.6" fill="currentColor"/>',
+ crop:'<path d="M6 2v16h16M2 6h16v16"/>',
+ scale:'<rect x="3" y="11" width="10" height="10"/><path d="M13 11l7-7M15 4h5v5"/>',
+ move:'<path d="M12 2v20M2 12h20M12 2 9 5M12 2l3 3M12 22l-3-3M12 22l3-3M2 12l3-3M2 12l3 3M22 12l-3-3M22 12l-3 3"/>',
+ text:'<path d="M5 7V4h14v3M12 4v16M9 20h6"/>',
+ brush:'<path d="M20 3 11 12"/><path d="M11 12c-3-1-5 1-5 3s-1 4-3 5c4 1 9 0 9-4 0-1-.4-2.4-1-4z"/>',
+ pencil:'<path d="M4 20l1-5L16 4l4 4L9 19z"/><path d="M14 6l4 4"/>',
+ eraser:'<path d="M4 15l9-9 6 6-7 7H8z"/><path d="M9 20h11M8.5 10.5l6 6"/>',
+ bucket:'<path d="M4 11l7-7 7 7-7 7z"/><path d="M4 11h14"/><path d="M20.5 14c0 2 1.2 3 1.2 4.2a1.2 1.2 0 0 1-2.4 0c0-1.2 1.2-2.2 1.2-4.2z" fill="currentColor"/>',
+ gradient:'<rect x="3" y="5" width="18" height="14"/><path d="M8 5v14" stroke-opacity=".8"/><path d="M12 5v14" stroke-opacity=".5"/><path d="M16 5v14" stroke-opacity=".25"/>',
+ zoom:'<circle cx="10" cy="10" r="6"/><path d="M15 15l6 6M10 7v6M7 10h6"/>',
+ picker:'<path d="M15 3l6 6M18 6 8 16l-4 1 1-4L15 3"/><path d="M3 21l2-2"/>',
+ eye:'<path d="M2 12s4-6.5 10-6.5S22 12 22 12s-4 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
+};
+function icon(id){const s=document.createElementNS('http://www.w3.org/2000/svg','svg');s.setAttribute('viewBox','0 0 24 24');s.setAttribute('fill','none');s.setAttribute('stroke','currentColor');s.setAttribute('stroke-width','1.7');s.setAttribute('stroke-linecap','round');s.setAttribute('stroke-linejoin','round');s.setAttribute('aria-hidden','true');s.innerHTML=ICON[id];return s;}
+const TOOLS={
+ rect:['Seleção retangular','R'],ellipse:['Seleção elíptica','E'],free:['Seleção livre','F'],fuzzy:['Seleção difusa','U'],bycolor:['Selecionar por cor','Shift+O'],
+ crop:['Recortar','Shift+C'],scale:['Escalar','Shift+S'],move:['Mover','M'],text:['Texto','T'],
+ brush:['Pincel','P'],pencil:['Lápis','N'],eraser:['Borracha','Shift+E'],bucket:['Balde de tinta','Shift+B'],gradient:['Gradiente','G'],
+ zoom:['Ampliar (zoom)','Z'],picker:['Seletor de cor','O']
+};
+function toolButton(id,onclick){const [name,key]=TOOLS[id];return h('button',{type:'button',class:'tool','data-tool':id,title:name+' ('+key+')','aria-label':name+', atalho '+key,'aria-pressed':'false',onclick},icon(id));}
+
+/* ---------- A imagem de exemplo (desenhada aqui, sem ficheiros externos) ---------- */
+function circ(x,cx,cy,r){x.moveTo(cx+r,cy);x.arc(cx,cy,r,0,Math.PI*2);}
+const SHAPES={
+ sky:[x=>x.rect(0,0,SW,SH),x=>{const g=x.createLinearGradient(0,0,0,170);g.addColorStop(0,'#5fb3ea');g.addColorStop(1,'#d3ecff');return g;}],
+ sun:[x=>circ(x,300,50,24),'#ffd23f'],
+ cloud1:[x=>{circ(x,70,45,16);circ(x,90,38,20);circ(x,112,46,15);},'#ffffff'],
+ cloud2:[x=>{circ(x,205,70,12);circ(x,222,64,16);circ(x,240,71,12);},'#ffffff'],
+ sea:[x=>x.rect(150,150,210,90),x=>{const g=x.createLinearGradient(0,150,0,240);g.addColorStop(0,'#2f8fd0');g.addColorStop(1,'#1d5c97');return g;}],
+ sand:[x=>{x.moveTo(205,240);x.quadraticCurveTo(280,198,360,204);x.lineTo(360,240);x.closePath();},'#f0d08a'],
+ hill:[x=>{x.moveTo(0,240);x.lineTo(0,142);x.quadraticCurveTo(110,96,212,150);x.quadraticCurveTo(232,192,246,240);x.closePath();},'#4caf5a'],
+ wall:[x=>x.rect(58,128,84,62),'#fff3dc'],
+ roof:[x=>{x.moveTo(48,130);x.lineTo(100,92);x.lineTo(152,130);x.closePath();},'#d9483b'],
+ door:[x=>x.rect(90,158,20,32),'#7a4a2b'],
+ win:[x=>x.rect(116,142,18,16),'#8fd3ff'],
+ plate:[x=>x.rect(63,140,22,13),'#ffffff'],
+ trunk:[x=>x.rect(178,150,8,28),'#8a5a33'],
+ crown:[x=>circ(x,182,136,18),'#2e8b47'],
+ hull:[x=>{x.moveTo(258,178);x.lineTo(320,178);x.lineTo(309,192);x.lineTo(269,192);x.closePath();},'#c0392b'],
+ mast:[x=>x.rect(287,136,3,42),'#5b3a21'],
+ sail:[x=>{x.moveTo(291,140);x.lineTo(291,174);x.lineTo(316,174);x.closePath();},'#ffffff']
+};
+const ALL=['sky','sun','cloud1','cloud2','sea','sand','hill','wall','roof','door','win','plate','trunk','crown','hull','mast','sail'];
+function drawParts(x,parts,line=false){
+ for(const p of parts){
+  const [path,fill]=SHAPES[p];
+  x.beginPath();path(x);
+  if(line){
+   if(p==='sky'){x.fillStyle='#fff';x.fill();continue;}
+   x.fillStyle='#fff';x.fill();x.lineWidth=3;x.strokeStyle='#000';x.lineJoin='round';x.stroke();
+  }else{x.fillStyle=typeof fill==='function'?fill(x):fill;x.fill();}
+  if(p==='plate'){x.fillStyle=line?'#000':'#1d2230';x.font='bold 10px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('12',74,147);}
+ }
+}
+function scene({noise=0,line=false,parts=ALL,w=SW,hh=SH}={}){
+ const c=canvas(w,hh,null),x=ctx2(c);
+ x.save();x.scale(w/SW,hh/SH);drawParts(x,parts,line);x.restore();
+ if(line||noise){
+  const d=x.getImageData(0,0,w,hh),a=d.data,r=rng(7);
+  for(let i=0;i<a.length;i+=4){
+   if(line){const v=(a[i]*.3+a[i+1]*.59+a[i+2]*.11)<170?0:255;a[i]=a[i+1]=a[i+2]=v;a[i+3]=255;}
+   else if(a[i+3]){const n=(r()-.5)*noise;a[i]=clamp(a[i]+n,0,255);a[i+1]=clamp(a[i+1]+n,0,255);a[i+2]=clamp(a[i+2]+n,0,255);}
+  }
+  x.putImageData(d,0,0);
+ }
+ return c;
+}
+function copyCanvas(src){const c=canvas(src.width,src.height,null);ctx2(c).drawImage(src,0,0);return c;}
+
+/* ===================== LABORATÓRIOS ===================== */
+function labFrame(title,hint,stageKids,panelKids,st){
+ const main=h('div',{class:'lab-main'+(panelKids?'':' solo')},h('div',{class:'stage'},stageKids),panelKids?h('div',{class:'panel'},panelKids):null);
+ return h('div',{class:'lab',tabindex:'0','aria-label':'Laboratório: '+title},h('div',{class:'lab-bar'},h('b',{},title),h('span',{},hint)),main,st);
+}
+
+/* 1. Interface */
+function interfaceLab(){
+ const AREAS={menu:['Barra de menus','Dá acesso a todos os comandos: Ficheiro, Imagem, Cores, Filtros…'],tools:['Caixa de ferramentas','Tem as ferramentas de seleção, pintura, texto e transformação.'],options:['Opções da ferramenta','Mostra as definições da ferramenta escolhida, como o tamanho do pincel.'],canvas:['Janela da imagem','É onde está a imagem que estás a editar.'],layers:['Painel Camadas','Mostra as camadas da imagem, da que está por cima para a que está por baixo.'],status:['Barra de estado','Mostra a posição do rato, o zoom e o tamanho do ficheiro.']};
+ const ORDER=['tools','canvas','layers','options','menu','status'];
+ let step=0;
+ const mission=h('p',{class:'mission'});
+ const st=status('Clica na zona que a missão pede.');
+ const zones={};
+ const mk=(id,cls,...kids)=>zones[id]=h('div',{class:'zone '+cls,role:'button',tabindex:'0','aria-label':'Zona da janela',onclick:()=>pick(id),onkeydown:e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(id);}}},kids);
+ const mini=scene({w:240,hh:160});mini.className='';
+ const mock=h('div',{class:'mock'},
+  mk('menu','z-menu',['Ficheiro','Editar','Selecionar','Ver','Imagem','Camada','Cores','Ferramentas','Filtros','Janelas','Ajuda'].map(t=>h('span',{},t))),
+  mk('tools','z-tools',Array.from({length:12},()=>h('i')),h('i',{class:'fgbg'})),
+  mk('canvas','z-canvas',mini),
+  mk('layers','z-layers',h('span',{},'Camadas'),['Texto','Barco','Fundo'].map(n=>h('div',{},h('i'),n))),
+  mk('options','z-options',h('span',{},'Opções'),h('div'),h('div'),h('div')),
+  mk('status','z-status','px   100 %   praia.xcf (1,2 MB)')
+ );
+ function show(){
+  if(step>=ORDER.length){mission.textContent='Encontraste as seis zonas!';say(st,'Muito bem. Agora já sabes onde está cada coisa no GIMP.','good');again.hidden=false;return;}
+  mission.textContent='Missão '+(step+1)+' de 6: clica em «'+AREAS[ORDER[step]][0]+'».';
+ }
+ function pick(id){
+  if(step>=ORDER.length)return;
+  const want=ORDER[step];
+  Object.values(zones).forEach(z=>z.classList.remove('wrong'));
+  if(id===want){zones[id].classList.add('found');say(st,'Certo! '+AREAS[id][1],'good');step++;show();}
+  else{zones[id].classList.add('wrong');say(st,'Isso é a zona «'+AREAS[id][0]+'». Procura «'+AREAS[want][0]+'».','bad');}
+ }
+ const again=h('button',{type:'button',class:'ui-btn',hidden:'',onclick:()=>{step=0;again.hidden=true;Object.values(zones).forEach(z=>z.classList.remove('found','wrong'));say(st,'Clica na zona que a missão pede.');show();}},'Repetir as missões');
+ show();
+ return labFrame('Explorar a janela','Clica nas zonas',h('div',{style:'width:100%;display:grid;gap:10px;justify-items:center'},mission,mock,again),null,st);
+}
+
+/* 2. Atalhos */
+function shortcutsLab(){
+ const ids=Object.keys(TOOLS);
+ const strip=h('div',{class:'toolstrip',style:'max-width:340px'});
+ const btn={};
+ ids.forEach(id=>{btn[id]=toolButton(id,()=>choose(id,true));strip.append(btn[id]);});
+ const ask=h('p',{class:'mission'});
+ const score=h('p',{style:'margin:0;color:var(--ui-muted)'});
+ const st=status('Clica aqui no laboratório para ele receber as teclas.');
+ let target,hits=0,tries=0;
+ const r=rng(Date.now()%9999);
+ function next(){let n;do{n=ids[Math.floor(r()*ids.length)];}while(n===target);target=n;ask.textContent='Carrega na tecla da ferramenta: '+TOOLS[target][0];}
+ function choose(id,clicked){
+  ids.forEach(i=>btn[i].setAttribute('aria-pressed',String(i===id)));
+  btn[id].classList.remove('flash');void btn[id].offsetWidth;btn[id].classList.add('flash');
+  if(clicked){say(st,TOOLS[id][0]+': atalho '+TOOLS[id][1]+'.');return;}
+  tries++;
+  if(id===target){hits++;say(st,'Certo! '+TOOLS[id][0]+' é '+TOOLS[id][1]+'.','good');next();}
+  else say(st,'Escolheste '+TOOLS[id][0]+' ('+TOOLS[id][1]+'). Tenta outra vez.','bad');
+  score.textContent=hits+' certas em '+tries+' tentativas';
+ }
+ const lab=labFrame('Caixa de ferramentas','Usa o teclado',h('div',{style:'display:grid;gap:12px;justify-items:center;width:100%'},ask,strip,score),null,st);
+ keys(lab,k=>{const id=ids.find(i=>TOOLS[i][1]===k);if(id){choose(id,false);return true;}return false;});
+ next();
+ return lab;
+}
+
+/* 3. Formatos */
+function formatsLab(){
+ const src=canvas(SW,SH,null),sx=ctx2(src);
+ sx.save();sx.beginPath();sx.arc(180,120,112,0,Math.PI*2);sx.clip();sx.drawImage(scene(),0,0);sx.restore();
+ sx.lineWidth=6;sx.strokeStyle='#ffffff';sx.beginPath();sx.arc(180,120,109,0,Math.PI*2);sx.stroke();
+ const cv=canvas(),x=ctx2(cv);
+ const stage=h('div',{class:'checker',style:'width:100%;max-width:560px;border-radius:4px'},cv);
+ let fmt='xcf';
+ const q=h('input',{type:'range',min:5,max:100,value:90,'aria-label':'Qualidade JPEG'});
+ const ql=h('output',{},'90');
+ const qWrap=h('label',{hidden:''},h('span',{},'Qualidade: ',ql),q);
+ const sizeBar=h('i',{style:'width:100%'});
+ const props=h('table',{class:'props'});
+ const st=status('');
+ const fmts={xcf:'XCF (GIMP)',png:'PNG',jpg:'JPEG'};
+ const fb={};
+ const seg=h('div',{class:'row'},Object.entries(fmts).map(([k,v])=>fb[k]=h('button',{type:'button',class:'ui-btn','aria-pressed':String(k===fmt),onclick:()=>{fmt=k;draw();}},v)));
+ const INFO={xcf:[['Guarda camadas','Sim'],['Transparência','Sim'],['Perde qualidade','Não'],['Abre em qualquer lado','Não']],png:[['Guarda camadas','Não'],['Transparência','Sim'],['Perde qualidade','Não'],['Abre em qualquer lado','Sim']],jpg:[['Guarda camadas','Não'],['Transparência','Não'],['Perde qualidade','Sim'],['Abre em qualquer lado','Sim']]};
+ const TIP={xcf:'XCF: o teu projeto de trabalho. Guarda tudo para continuares a editar.',png:'PNG: bom para desenhos, logótipos e imagens com texto ou transparência.',jpg:'JPEG: bom para fotografias. A transparência fica branca e, com qualidade baixa, aparecem quadradinhos.'};
+ function draw(){
+  Object.entries(fb).forEach(([k,b])=>b.setAttribute('aria-pressed',String(k===fmt)));
+  qWrap.hidden=fmt!=='jpg';ql.textContent=q.value;
+  x.clearRect(0,0,SW,SH);
+  if(fmt!=='jpg'){x.drawImage(src,0,0);}
+  else{
+   x.fillStyle='#fff';x.fillRect(0,0,SW,SH);x.drawImage(src,0,0);
+   const qq=+q.value,m=Math.pow((100-qq)/100,1.3)*.95,step=1+Math.round((100-qq)/3.2);
+   const d=x.getImageData(0,0,SW,SH),a=d.data;
+   for(let by=0;by<SH;by+=8)for(let bx=0;bx<SW;bx+=8){
+    let s=[0,0,0];
+    for(let yy=by;yy<by+8;yy++)for(let xx=bx;xx<bx+8;xx++){const i=(yy*SW+xx)*4;s[0]+=a[i];s[1]+=a[i+1];s[2]+=a[i+2];}
+    s=s.map(v=>v/64);
+    for(let yy=by;yy<by+8;yy++)for(let xx=bx;xx<bx+8;xx++){const i=(yy*SW+xx)*4;for(let c=0;c<3;c++){const v=a[i+c]*(1-m)+s[c]*m;a[i+c]=Math.round(v/step)*step;}}
+   }
+   x.putImageData(d,0,0);
+  }
+  props.replaceChildren(...INFO[fmt].map(([a,b])=>h('tr',{},h('td',{},a),h('td',{},b))));
+  const size=fmt==='xcf'?100:fmt==='png'?62:Math.round(6+Math.pow(+q.value/100,2.2)*38);
+  sizeBar.style.width=size+'%';
+  say(st,TIP[fmt]);
+ }
+ q.addEventListener('input',draw);
+ draw();
+ return labFrame('Exportar como…','Compara os formatos',stage,[h('h4',{},'Formato'),seg,qWrap,props,h('h4',{},'Tamanho do ficheiro (comparação)'),h('div',{class:'bar'},sizeBar)],st);
+}
+
+/* 4. Zoom e píxeis */
+function zoomLab(){
+ const src=scene(),data=ctx2(src).getImageData(0,0,SW,SH).data;
+ const cv=canvas(SW,SH,'view pix'),x=cv.getContext('2d');
+ const L=[1,2,4,8,12,24,40];let li=0,cx=SW/2,cy=SH/2,hover=null;
+ const zr=h('input',{type:'range',min:0,max:L.length-1,value:0,'aria-label':'Zoom'});
+ const zl=h('output',{},'100 %');
+ const sw=h('div',{class:'swatch',style:'height:46px'});
+ const info=h('p',{style:'margin:0'},'Passa o rato pela imagem.');
+ const st=status('Amplia com o seletor ou com as teclas + e -. Arrasta para mover a vista.');
+ function view(){const z=L[li],vw=SW/z,vh=SH/z;cx=clamp(cx,vw/2,SW-vw/2);cy=clamp(cy,vh/2,SH-vh/2);return{z,vw,vh,left:Math.round(cx-vw/2),top:Math.round(cy-vh/2)};}
+ function draw(){
+  const v=view();x.imageSmoothingEnabled=false;x.clearRect(0,0,SW,SH);
+  x.drawImage(src,v.left,v.top,v.vw,v.vh,0,0,SW,SH);
+  if(v.z>=8){x.strokeStyle='rgba(0,0,0,.28)';x.lineWidth=1;x.beginPath();for(let i=0;i<=SW;i+=v.z){x.moveTo(i+.5,0);x.lineTo(i+.5,SH);}for(let j=0;j<=SH;j+=v.z){x.moveTo(0,j+.5);x.lineTo(SW,j+.5);}x.stroke();}
+  if(hover&&v.z>=4){x.strokeStyle='#fff';x.lineWidth=2;x.strokeRect((hover.x-v.left)*v.z,(hover.y-v.top)*v.z,v.z,v.z);}
+  zr.value=li;zl.textContent=(L[li]*100)+' %';
+ }
+ function setZ(n){li=clamp(n,0,L.length-1);draw();say(st,li===0?'A 100 %, cada píxel da imagem ocupa um píxel do ecrã.':'A '+L[li]*100+' % já se veem os quadradinhos: cada um é um píxel com uma só cor.');}
+ zr.addEventListener('input',()=>setZ(+zr.value));
+ function inspect(p){const v=view();const px=clamp(Math.floor(v.left+p.x/v.z),0,SW-1),py=clamp(Math.floor(v.top+p.y/v.z),0,SH-1);const i=(py*SW+px)*4;hover={x:px,y:py};const c=[data[i],data[i+1],data[i+2]];sw.style.background=toHex(...c);info.innerHTML='';info.append('Píxel ('+px+', '+py+')',h('br'),'R '+c[0]+'  G '+c[1]+'  B '+c[2],h('br'),toHex(...c));draw();}
+ cv.addEventListener('pointermove',e=>{if(!e.buttons)inspect(pos(e,cv));});
+ let last;
+ drag(cv,{down:p=>{last=p;inspect(p);},move:p=>{const z=L[li];cx-=(p.x-last.x)/z;cy-=(p.y-last.y)/z;last=p;draw();}});
+ const lab=labFrame('Ampliar','+ e − ampliam e reduzem',cv,[h('h4',{},'Zoom'),h('label',{},h('span',{},zl),zr),h('div',{class:'row'},h('button',{type:'button',class:'ui-btn',onclick:()=>setZ(li-1)},'Reduzir'),h('button',{type:'button',class:'ui-btn',onclick:()=>setZ(li+1)},'Ampliar'),h('button',{type:'button',class:'ui-btn',onclick:()=>setZ(0)},'100 %')),h('h4',{},'Cor do píxel'),sw,info],st);
+ keys(lab,k=>{if(k==='+'){setZ(li+1);return true;}if(k==='-'){setZ(li-1);return true;}if(k==='1'){setZ(0);return true;}return false;});
+ draw();return lab;
+}
+
+/* 5. RGB */
+function rgbLab(){
+ const v=[255,210,63];
+ const sw=h('div',{class:'swatch',style:'width:100%;max-width:420px;height:180px'});
+ const hx=h('p',{class:'hex'});
+ const st=status('');
+ const names=['R (vermelho)','G (verde)','B (azul)'],cols=['#ff4d4d','#3ddc6a','#4d7dff'];
+ const outs=[],ranges=[];
+ const sliders=names.map((n,i)=>{const o=h('output',{},'');outs.push(o);const r=h('input',{type:'range',min:0,max:255,value:v[i],'aria-label':n,style:'accent-color:'+cols[i]});ranges.push(r);r.addEventListener('input',()=>{v[i]=+r.value;draw();});return h('label',{},h('span',{},n+': ',o),r);});
+ const P=[['Vermelho',[255,0,0]],['Verde',[0,255,0]],['Azul',[0,0,255]],['Amarelo',[255,255,0]],['Branco',[255,255,255]],['Preto',[0,0,0]],['Cinzento',[128,128,128]],['Laranja',[255,140,0]]];
+ const presets=h('div',{class:'row'},P.map(([n,c])=>h('button',{type:'button',class:'ui-btn',onclick:()=>{c.forEach((val,i)=>{v[i]=val;ranges[i].value=val;});draw();}},n)));
+ function draw(){sw.style.background=toHex(...v);hx.textContent='Hexadecimal: '+toHex(...v);outs.forEach((o,i)=>o.textContent=v[i]);
+  const [r,g,b]=v;let t='Mexe nos valores e vê a cor mudar.';
+  if(r===g&&g===b)t=r===0?'Os três a 0 dão preto: não há luz nenhuma.':r===255?'Os três no máximo dão branco: toda a luz junta.':'Valores iguais dão sempre cinzento.';
+  else if(r===255&&g===255&&b===0)t='Vermelho + verde = amarelo. No ecrã, as cores misturam-se como luz.';
+  say(st,t);}
+ draw();
+ return labFrame('Cor de frente','Mistura de luz RGB',h('div',{style:'width:100%;display:grid;gap:8px;justify-items:center'},sw,hx),[h('h4',{},'Canais'),...sliders,h('h4',{},'Experimenta'),presets],st);
+}
+
+/* 6. Escalar */
+function scaleLab(){
+ const OW=180,OH=120;const src=scene({w:OW,hh:OH});
+ const out=canvas(OW,OH,'');out.style.cssText='display:block;max-width:none;box-shadow:0 0 0 1px #1a1c22';
+ const wrap=h('div',{class:'checker',style:'padding:0;display:inline-block'},out);
+ const wi=h('input',{type:'number',min:10,max:720,value:OW,'aria-label':'Largura'});
+ const hi=h('input',{type:'number',min:10,max:480,value:OH,'aria-label':'Altura'});
+ let lock=true;
+ const chain=h('button',{type:'button',class:'ui-btn','aria-pressed':'true',onclick:()=>{lock=!lock;chain.setAttribute('aria-pressed',String(lock));chain.textContent=lock?'Corrente fechada':'Corrente aberta';}},'Corrente fechada');
+ const st=status('');
+ function apply(){
+  const W=clamp(Math.round(+wi.value||OW),10,720),H=clamp(Math.round(+hi.value||OH),10,480);
+  out.width=W;out.height=H;const x=out.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(src,0,0,W,H);
+  out.style.width=W+'px';
+  const ratio=(W/H)/(OW/OH);
+  if(Math.abs(ratio-1)>.04)say(st,'A imagem ficou esticada ou achatada. Fecha a corrente para manter as proporções.','bad');
+  else if(W>OW)say(st,'Ampliaste para '+W+' × '+H+'. O GIMP teve de inventar píxeis, por isso a imagem fica desfocada.','bad');
+  else if(W<OW)say(st,'Reduziste para '+W+' × '+H+'. Há menos píxeis, mas a imagem continua nítida.','good');
+  else say(st,'Tamanho original: 180 × 120 píxeis. Muda a largura e carrega em Escalar.');
+ }
+ wi.addEventListener('input',()=>{if(lock)hi.value=Math.round(+wi.value*OH/OW);});
+ hi.addEventListener('input',()=>{if(lock)wi.value=Math.round(+hi.value*OW/OH);});
+ const go=h('button',{type:'button',class:'ui-btn go',onclick:apply},'Escalar');
+ const reset=h('button',{type:'button',class:'ui-btn',onclick:()=>{wi.value=OW;hi.value=OH;apply();}},'Repor');
+ [wi,hi].forEach(i=>i.addEventListener('keydown',e=>{if(e.key==='Enter')apply();}));
+ apply();
+ return labFrame('Escalar imagem','Imagem > Escalar imagem',wrap,[h('h4',{},'Tamanho da imagem (píxeis)'),h('label',{},'Largura',wi),h('label',{},'Altura',hi),chain,h('div',{class:'row'},go,reset)],st);
+}
+
+/* 7. Recortar */
+function cropLab(){
+ let img=scene(),hist=[];let r=null,start=null;
+ const cv=canvas(),x=cv.getContext('2d');
+ const st=status('Arrasta sobre a imagem para escolher a zona a manter.');
+ const dims=h('p',{style:'margin:0'},'');
+ function fit(){cv.width=img.width;cv.height=img.height;cv.style.width=(img.width/SW*100)+'%';cv.style.maxWidth=(img.width/SW*560)+'px';}
+ function draw(){
+  x.clearRect(0,0,cv.width,cv.height);x.drawImage(img,0,0);
+  if(r&&r.w>1&&r.h>1){x.fillStyle='rgba(0,0,0,.55)';x.beginPath();x.rect(0,0,cv.width,cv.height);x.rect(r.x,r.y,r.w,r.h);x.fill('evenodd');x.strokeStyle='#fff';x.setLineDash([4,3]);x.lineWidth=1;x.strokeRect(r.x+.5,r.y+.5,r.w-1,r.h-1);x.setLineDash([]);dims.textContent='Recorte: '+Math.round(r.w)+' × '+Math.round(r.h)+' píxeis';}
+  else dims.textContent='Imagem: '+img.width+' × '+img.height+' píxeis';
+ }
+ drag(cv,{down:p=>{start=p;r=null;draw();},move:p=>{const x1=clamp(Math.min(start.x,p.x),0,cv.width),y1=clamp(Math.min(start.y,p.y),0,cv.height),x2=clamp(Math.max(start.x,p.x),0,cv.width),y2=clamp(Math.max(start.y,p.y),0,cv.height);r={x:Math.round(x1),y:Math.round(y1),w:Math.round(x2-x1),h:Math.round(y2-y1)};draw();},up:()=>{if(r&&r.w>3&&r.h>3)say(st,'Carrega em Enter (ou no botão Recortar) para aplicar.');}});
+ function crop(){if(!r||r.w<4||r.h<4){say(st,'Primeiro arrasta para escolher uma zona.','bad');return;}hist.push(img);const n=canvas(r.w,r.h,null);ctx2(n).drawImage(img,r.x,r.y,r.w,r.h,0,0,r.w,r.h);img=n;r=null;fit();draw();say(st,'Recortado. O que estava fora do retângulo desapareceu. Ctrl+Z desfaz.','good');}
+ function undo(){if(!hist.length)return;img=hist.pop();r=null;fit();draw();say(st,'Recorte desfeito.');}
+ const lab=labFrame('Recortar','Shift+C no GIMP',cv,[h('h4',{},'Recorte'),dims,h('div',{class:'row'},h('button',{type:'button',class:'ui-btn go',onclick:crop},'Recortar'),h('button',{type:'button',class:'ui-btn',onclick:undo},'Desfazer'))],st);
+ keys(lab,k=>{if(k==='Enter'){crop();return true;}if(k==='Escape'){r=null;draw();return true;}if(k==='Ctrl+Z'){undo();return true;}return false;});
+ fit();draw();return lab;
+}
+
+/* 8. Rodar e espelhar */
+function transformLab(){
+ let img=scene(),hist=[];
+ const cv=canvas(),x=cv.getContext('2d');
+ const st=status('Escolhe uma transformação.');
+ function show(){cv.width=img.width;cv.height=img.height;cv.style.width=(img.width/SW*100)+'%';cv.style.maxWidth=(img.width/SW*560)+'px';x.drawImage(img,0,0);}
+ function op(name,fn,msg){hist.push(img);const rot=name==='cw'||name==='ccw';const n=canvas(rot?img.height:img.width,rot?img.width:img.height,null),c=ctx2(n);fn(c,n);c.drawImage(img,0,0);img=n;show();say(st,msg+' A imagem tem agora '+img.width+' × '+img.height+' píxeis.','good');}
+ const B=[
+  ['Rodar 90° no sentido horário','cw',(c,n)=>{c.translate(n.width,0);c.rotate(Math.PI/2);},'Rodaste 90° para a direita: a largura e a altura trocaram.'],
+  ['Rodar 90° no sentido anti-horário','ccw',(c,n)=>{c.translate(0,n.height);c.rotate(-Math.PI/2);},'Rodaste 90° para a esquerda: a largura e a altura trocaram.'],
+  ['Rodar 180°','r180',(c,n)=>{c.translate(n.width,n.height);c.rotate(Math.PI);},'Rodaste 180°: a imagem ficou de pernas para o ar.'],
+  ['Espelhar horizontalmente','fh',(c,n)=>{c.translate(n.width,0);c.scale(-1,1);},'Espelhaste: a esquerda passou para a direita.'],
+  ['Espelhar verticalmente','fv',(c,n)=>{c.translate(0,n.height);c.scale(1,-1);},'Espelhaste na vertical: o céu passou para baixo.']
+ ];
+ const undo=()=>{if(hist.length){img=hist.pop();show();say(st,'Desfeito.');}};
+ const lab=labFrame('Transformar','Imagem > Transformar',cv,[h('h4',{},'Imagem > Transformar'),...B.map(([t,n,f,m])=>h('button',{type:'button',class:'ui-btn',onclick:()=>op(n,f,m)},t)),h('button',{type:'button',class:'ui-btn',onclick:undo},'Desfazer (Ctrl+Z)')],st);
+ keys(lab,k=>{if(k==='Ctrl+Z'){undo();return true;}return false;});
+ show();return lab;
+}
+
+/* 9. Seleções */
+function selectLab(cfg){
+ const tools=cfg.tools;let tool=tools[0];
+ let img=scene();let ix=ctx2(img);
+ let mask=new Uint8Array(SW*SH),edges=[],hist=[];
+ const cv=canvas(),x=cv.getContext('2d'),ov=canvas(),ox=ov.getContext('2d');
+ const stack=h('div',{class:'stack checker'},cv,ov);
+ const st=status('');
+ let mode='replace',thr=15,fg='#e5484d';
+ let drawing=null,phase=0;
+ const tb={};
+ const strip=h('div',{class:'toolstrip'},tools.map(id=>tb[id]=toolButton(id,()=>setTool(id))));
+ function setTool(id){tool=id;tools.forEach(t=>tb[t].setAttribute('aria-pressed',String(t===id)));thrWrap.hidden=!(id==='fuzzy'||id==='bycolor');
+  const tips={rect:'Arrasta para desenhar um retângulo.',ellipse:'Arrasta para desenhar uma elipse.',free:'Arrasta à volta do que queres selecionar e larga para fechar.',fuzzy:'Clica numa cor: são selecionados os vizinhos com cor parecida.',bycolor:'Clica numa cor: é selecionada essa cor em toda a imagem.'};
+  say(st,TOOLS[id][0]+': '+tips[id]);}
+ const thrIn=h('input',{type:'range',min:0,max:120,value:thr,'aria-label':'Limiar'});
+ const thrOut=h('output',{},thr);
+ thrIn.addEventListener('input',()=>{thr=+thrIn.value;thrOut.textContent=thr;});
+ const thrWrap=h('label',{hidden:''},h('span',{},'Limiar: ',thrOut),thrIn);
+ const mb={};
+ const MODES=[['replace','Substituir'],['add','Juntar (Shift)'],['sub','Tirar (Ctrl)'],['int','Intersetar']];
+ const modeRow=cfg.modes?h('div',{class:'row'},MODES.map(([k,n])=>mb[k]=h('button',{type:'button',class:'ui-btn','aria-pressed':String(k===mode),onclick:()=>{mode=k;MODES.forEach(([m])=>mb[m].setAttribute('aria-pressed',String(m===k)));}},n))):null;
+ const fgIn=h('input',{type:'color',value:fg,'aria-label':'Cor de frente',style:'width:44px;height:30px;padding:0;border:1px solid #111;background:none'});
+ fgIn.addEventListener('input',()=>fg=fgIn.value);
+ function any(){for(let i=0;i<mask.length;i++)if(mask[i])return true;return false;}
+ function computeEdges(){edges=[];for(let y=0;y<SH;y++)for(let x0=0;x0<SW;x0++){const i=y*SW+x0;if(!mask[i])continue;if(x0===0||y===0||x0===SW-1||y===SH-1||!mask[i-1]||!mask[i+1]||!mask[i-SW]||!mask[i+SW])edges.push(i);}}
+ function paintOverlay(){
+  const d=ox.createImageData(SW,SH),a=d.data;
+  for(const i of edges){const px=i%SW,py=(i/SW)|0;const on=((px+py+phase)>>2)&1;const k=i*4;a[k]=a[k+1]=a[k+2]=on?0:255;a[k+3]=255;}
+  ox.putImageData(d,0,0);
+  if(drawing){ox.save();ox.setLineDash([4,3]);ox.lineDashOffset=-phase;ox.strokeStyle='#fff';ox.lineWidth=1.5;ox.beginPath();shapePath(ox,drawing);ox.stroke();ox.strokeStyle='#000';ox.lineDashOffset=-phase+3.5;ox.stroke();ox.restore();}
+ }
+ const iv=setInterval(()=>{phase=(phase+1)%8;paintOverlay();},110);onCleanup(()=>clearInterval(iv));
+ function redraw(){x.clearRect(0,0,SW,SH);x.drawImage(img,0,0);}
+ function shapePath(c,d){
+  if(d.t==='free'){d.pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));if(d.closed)c.closePath();return;}
+  let {x:x1,y:y1}=d.a,{x:x2,y:y2}=d.b;
+  if(d.square){const s=Math.max(Math.abs(x2-x1),Math.abs(y2-y1));x2=x1+Math.sign(x2-x1||1)*s;y2=y1+Math.sign(y2-y1||1)*s;}
+  const L=Math.min(x1,x2),T=Math.min(y1,y2),W=Math.abs(x2-x1),H=Math.abs(y2-y1);
+  if(d.t==='rect')c.rect(L,T,W,H);else c.ellipse(L+W/2,T+H/2,W/2||.1,H/2||.1,0,0,Math.PI*2);
+ }
+ function shapeMask(d){const c=canvas(SW,SH,null),cx=ctx2(c);cx.fillStyle='#000';cx.beginPath();shapePath(cx,{...d,closed:true});cx.fill();const a=cx.getImageData(0,0,SW,SH).data,m=new Uint8Array(SW*SH);for(let i=0;i<m.length;i++)m[i]=a[i*4+3]>127?1:0;return m;}
+ function colorMask(px,py,contiguous){
+  const d=ix.getImageData(0,0,SW,SH).data,m=new Uint8Array(SW*SH);
+  const s=(py*SW+px)*4,sr=d[s],sg=d[s+1],sb=d[s+2],sa=d[s+3];
+  const like=i=>{const k=i*4;return Math.max(Math.abs(d[k]-sr),Math.abs(d[k+1]-sg),Math.abs(d[k+2]-sb),Math.abs(d[k+3]-sa))<=thr;};
+  if(!contiguous){for(let i=0;i<m.length;i++)if(like(i))m[i]=1;return m;}
+  const stackA=[py*SW+px];m[py*SW+px]=1;
+  while(stackA.length){const i=stackA.pop(),xx=i%SW,yy=(i/SW)|0;
+   for(const n of [xx>0?i-1:-1,xx<SW-1?i+1:-1,yy>0?i-SW:-1,yy<SH-1?i+SW:-1]){if(n>=0&&!m[n]&&like(n)){m[n]=1;stackA.push(n);}}}
+  return m;
+ }
+ function save(){hist.push({img:ix.getImageData(0,0,SW,SH),mask:mask.slice()});if(hist.length>25)hist.shift();}
+ function combine(m,md){
+  save();
+  for(let i=0;i<mask.length;i++){
+   if(md==='replace')mask[i]=m[i];else if(md==='add')mask[i]=mask[i]|m[i];else if(md==='sub')mask[i]=mask[i]&&!m[i]?1:0;else mask[i]=mask[i]&m[i];
+  }
+  computeEdges();
+  let n=0;for(let i=0;i<mask.length;i++)n+=mask[i];
+  const names={replace:'',add:' (juntaste à seleção)',sub:' (tiraste da seleção)',int:' (ficou só a parte comum)'};
+  say(st,n?'Seleção com '+n.toLocaleString('pt-PT')+' píxeis'+names[md]+'. Experimenta uma ação.':'Não há nada selecionado.');
+ }
+ function modeFrom(e){if(e.shiftKey&&(e.ctrlKey||e.metaKey))return'int';if(e.shiftKey)return'add';if(e.ctrlKey||e.metaKey)return'sub';return mode;}
+ drag(cv,{
+  down:(p,e)=>{
+   const md=modeFrom(e);
+   if(tool==='fuzzy'||tool==='bycolor'){combine(colorMask(clamp(Math.floor(p.x),0,SW-1),clamp(Math.floor(p.y),0,SH-1),tool==='fuzzy'),md);return;}
+   drawing={t:tool,a:p,b:p,pts:[p],md,shiftStart:e.shiftKey};
+  },
+  move:(p,e)=>{if(!drawing)return;drawing.b=p;drawing.square=e.shiftKey&&!drawing.shiftStart;if(drawing.t==='free')drawing.pts.push(p);paintOverlay();},
+  up:()=>{
+   if(!drawing)return;const d=drawing;drawing=null;
+   const tiny=d.t==='free'?d.pts.length<4:(Math.abs(d.b.x-d.a.x)<2&&Math.abs(d.b.y-d.a.y)<2);
+   if(tiny){if(d.md==='replace'){combine(new Uint8Array(SW*SH),'replace');}return;}
+   combine(shapeMask(d),d.md);
+  }
+ });
+ function forEachTarget(fn){const a=any();const d=ix.getImageData(0,0,SW,SH);for(let i=0;i<SW*SH;i++)if(!a||mask[i])fn(d.data,i*4);ix.putImageData(d,0,0);redraw();return a;}
+ const ACT={
+  del:()=>{save();const a=forEachTarget((d,k)=>{d[k+3]=0;});say(st,a?'Apagaste a zona selecionada. A camada tem canal alfa, por isso vês o xadrez da transparência.':'Sem seleção, apagaste a camada toda!','good');},
+  fill:()=>{save();const [r,g,b]=parseHex(fg);const a=forEachTarget((d,k)=>{d[k]=r;d[k+1]=g;d[k+2]=b;d[k+3]=255;});say(st,a?'Preencheste a seleção com a cor de frente.':'Sem seleção, preencheste a camada toda.','good');},
+  desat:()=>{save();const a=forEachTarget((d,k)=>{const v=Math.round(d[k]*.3+d[k+1]*.59+d[k+2]*.11);d[k]=d[k+1]=d[k+2]=v;});say(st,a?'Só a zona selecionada ficou a preto e branco.':'Sem seleção, toda a imagem ficou a preto e branco.','good');},
+  inv:()=>{save();for(let i=0;i<mask.length;i++)mask[i]=mask[i]?0:1;computeEdges();say(st,'Seleção invertida: agora está selecionado o que estava de fora.');},
+  all:()=>{save();mask.fill(1);computeEdges();say(st,'Selecionaste tudo (Ctrl+A).');},
+  none:()=>{save();mask.fill(0);computeEdges();say(st,'Seleção retirada (Shift+Ctrl+A).');},
+  undo:()=>{const s=hist.pop();if(!s){say(st,'Não há mais nada para desfazer.');return;}ix.putImageData(s.img,0,0);mask=s.mask;computeEdges();redraw();say(st,'Desfeito.');},
+  reset:()=>{img=scene();ix=ctx2(img);mask.fill(0);computeEdges();hist=[];redraw();say(st,'Imagem reposta.');}
+ };
+ const B=(t,k,act)=>h('button',{type:'button',class:'ui-btn',title:k||'',onclick:()=>act()},t);
+ const panel=[h('h4',{},'Ferramentas'),strip,thrWrap,modeRow?h('h4',{},'Modo'):null,modeRow,
+  h('h4',{},'Selecionar'),h('div',{class:'row'},B('Tudo','Ctrl+A',ACT.all),B('Nada','Shift+Ctrl+A',ACT.none),B('Inverter','Ctrl+I',ACT.inv)),
+  h('h4',{},'Ações na seleção'),h('div',{class:'row'},B('Apagar','Delete',ACT.del),B('Dessaturar','',ACT.desat)),h('div',{class:'row'},fgIn,B('Preencher','Ctrl+,',ACT.fill)),
+  h('div',{class:'row'},B('Desfazer','Ctrl+Z',ACT.undo),B('Repor imagem','',ACT.reset))];
+ const lab=labFrame('Seleções','Clica no laboratório para usar o teclado',stack,panel,st);
+ keys(lab,k=>{
+  const map={'Delete':ACT.del,'Backspace':ACT.del,'Ctrl+I':ACT.inv,'Ctrl+A':ACT.all,'Shift+Ctrl+A':ACT.none,'Ctrl+Z':ACT.undo,'Ctrl+,':ACT.fill};
+  if(map[k]){map[k]();return true;}
+  const t=tools.find(id=>TOOLS[id][1]===k);if(t){setTool(t);return true;}
+  return false;
+ });
+ redraw();setTool(tool);
+ return lab;
+}
+
+/* 10. Camadas */
+function layerCanvas(parts){const c=canvas(SW,SH,null);drawParts(ctx2(c),parts);return c;}
+function textLayer(t){const c=canvas(SW,SH,null),x=ctx2(c);x.font='800 46px "Bricolage Grotesque", sans-serif';x.textAlign='center';x.textBaseline='middle';x.lineJoin='round';x.lineWidth=7;x.strokeStyle='#1c2130';x.strokeText(t,180,118);x.fillStyle='#ffffff';x.fillText(t,180,118);return c;}
+function layersLab(cfg){
+ const sunset=()=>{const c=canvas(SW,SH,null),x=ctx2(c),g=x.createLinearGradient(0,0,0,SH);g.addColorStop(0,'#ff7a3d');g.addColorStop(.6,'#ffb36b');g.addColorStop(1,'#7a3d9e');x.fillStyle=g;x.fillRect(0,0,SW,SH);return c;};
+ let layers=[
+  {name:'Texto',c:textLayer('Bom verão!'),vis:true,op:100,mode:'source-over'},
+  {name:'Barco',c:layerCanvas(['hull','mast','sail']),vis:true,op:100,mode:'source-over'},
+  {name:'Casa',c:layerCanvas(['wall','roof','door','win','plate','trunk','crown']),vis:true,op:100,mode:'source-over'},
+  {name:'Nuvens',c:layerCanvas(['cloud1','cloud2']),vis:true,op:100,mode:'source-over'},
+  {name:'Fundo',c:layerCanvas(['sky','sun','sea','sand','hill']),vis:true,op:100,mode:'source-over'}
+ ];
+ if(cfg.sunset)layers.unshift({name:'Pôr do sol',c:sunset(),vis:false,op:70,mode:'multiply'});
+ if(cfg.puzzle){const by=n=>layers.find(l=>l.name===n);layers=[by('Fundo'),by('Nuvens'),by('Texto'),by('Barco'),by('Casa')];}
+ let active=0;
+ const cv=canvas(),x=cv.getContext('2d');
+ const stage=h('div',{class:'checker',style:'width:100%;max-width:560px'},cv);
+ const list=h('ul',{class:'layers'});
+ const st=status('');
+ const MODES=[['source-over','Normal'],['multiply','Multiplicar'],['screen','Ecrã'],['difference','Diferença']];
+ const modeSel=h('select',{'aria-label':'Modo da camada'},MODES.map(([v,n])=>h('option',{value:v},n)));
+ const opIn=h('input',{type:'range',min:0,max:100,value:100,'aria-label':'Opacidade'});
+ const opOut=h('output',{},'100');
+ modeSel.addEventListener('change',()=>{layers[active].mode=modeSel.value;draw();const n=MODES.find(m=>m[0]===modeSel.value)[1];say(st,'Modo '+n+(modeSel.value==='multiply'?': a camada escurece o que está por baixo.':modeSel.value==='screen'?': a camada clareia o que está por baixo.':modeSel.value==='difference'?': as cores subtraem-se e ficam estranhas.':': a camada tapa o que está por baixo.'));});
+ opIn.addEventListener('input',()=>{layers[active].op=+opIn.value;opOut.textContent=opIn.value;draw();});
+ function draw(){
+  x.clearRect(0,0,SW,SH);
+  for(let i=layers.length-1;i>=0;i--){const l=layers[i];if(!l.vis)continue;x.globalAlpha=l.op/100;x.globalCompositeOperation=l.mode;x.drawImage(l.c,0,0);}
+  x.globalAlpha=1;x.globalCompositeOperation='source-over';
+  list.replaceChildren(...layers.map((l,i)=>{
+   const th=canvas(72,48,null);const tx=th.getContext('2d');tx.drawImage(l.c,0,0,72,48);
+   const eye=h('button',{type:'button',class:'eye','aria-pressed':String(l.vis),'aria-label':(l.vis?'Esconder ':'Mostrar ')+l.name,onclick:e=>{e.stopPropagation();l.vis=!l.vis;draw();say(st,l.vis?'A camada '+l.name+' está visível.':'Escondeste a camada '+l.name+'. Continua lá, só não se vê.');check();}},icon('eye'));
+   return h('li',{class:i===active?'on':'',onclick:()=>{active=i;sync();draw();}},eye,th,h('span',{class:'nm'},l.name));
+  }));
+  modeSel.value=layers[active].mode;opIn.value=layers[active].op;opOut.textContent=layers[active].op;
+ }
+ function sync(){modeSel.value=layers[active].mode;opIn.value=layers[active].op;opOut.textContent=layers[active].op;}
+ function mv(d){const j=active+d;if(j<0||j>=layers.length)return;[layers[active],layers[j]]=[layers[j],layers[active]];active=j;draw();check(true);}
+ function check(moved){
+  if(!cfg.puzzle){if(moved)say(st,'Mudaste a ordem: a camada mais acima no painel aparece à frente.');return;}
+  const names=layers.map(l=>l.name);
+  if(names[names.length-1]!=='Fundo')say(st,'A camada Fundo tapa as outras porque não tem transparência. Desce-a até ao fim da lista.','bad');
+  else if(names[0]!=='Texto')say(st,'Quase! O texto deve ficar à frente de tudo: sobe a camada Texto até ao topo.','bad');
+  else say(st,'Boa! O Fundo está em baixo e o Texto por cima de tudo.','good');
+ }
+ const panel=[h('h4',{},'Camadas'),cfg.puzzle?null:h('label',{},h('span',{},'Modo'),modeSel),cfg.puzzle?null:h('label',{},h('span',{},'Opacidade: ',opOut),opIn),list,
+  h('div',{class:'row'},h('button',{type:'button',class:'ui-btn',onclick:()=>mv(-1)},'▲ Subir'),h('button',{type:'button',class:'ui-btn',onclick:()=>mv(1)},'▼ Descer'))];
+ draw();
+ if(cfg.puzzle)check();else say(st,cfg.sunset?'Liga o olho da camada Pôr do sol e muda o modo e a opacidade.':'Clica no olho para esconder ou mostrar uma camada. Clica no nome para a escolher.');
+ return labFrame('Painel Camadas',cfg.puzzle?'Põe as camadas por ordem':'Experimenta o olho',stage,panel,st);
+}
+
+/* 11. Canal alfa */
+function alphaLab(){
+ let img=scene(),ix=ctx2(img),alpha=false,bg='#ffffff';
+ const cv=canvas(),x=cv.getContext('2d');
+ const stage=h('div',{class:'checker',style:'width:100%;max-width:560px'},cv);
+ const st=status('Arrasta sobre a imagem com a Borracha. Depois adiciona o canal alfa e volta a experimentar.');
+ const nm=h('span',{class:'nm bold'},'Fotografia');
+ const th=canvas(72,48,null);
+ const li=h('ul',{class:'layers'},h('li',{class:'on'},h('span',{class:'eye'},icon('eye')),th,nm));
+ const bgIn=h('input',{type:'color',value:bg,'aria-label':'Cor de fundo',style:'width:44px;height:30px;padding:0;border:1px solid #111;background:none'});
+ bgIn.addEventListener('input',()=>bg=bgIn.value);
+ const tog=h('button',{type:'button',class:'ui-btn','aria-pressed':'false',onclick:()=>{
+  if(!alpha){alpha=true;say(st,'Canal alfa adicionado: o nome deixou de estar a negrito. Agora a Borracha deixa ver o xadrez da transparência.','good');}
+  else{alpha=false;ix.save();ix.globalCompositeOperation='destination-over';ix.fillStyle=bg;ix.fillRect(0,0,SW,SH);ix.restore();say(st,'Canal alfa removido: as zonas transparentes foram pintadas com a cor de fundo.');}
+  tog.setAttribute('aria-pressed',String(alpha));tog.textContent=alpha?'Remover canal alfa':'Adicionar canal alfa';nm.classList.toggle('bold',!alpha);draw();
+ }},'Adicionar canal alfa');
+ function draw(){x.clearRect(0,0,SW,SH);x.drawImage(img,0,0);const t=th.getContext('2d');t.clearRect(0,0,72,48);t.drawImage(img,0,0,72,48);}
+ let last=null,told=false;
+ function erase(p){ix.save();ix.lineCap='round';ix.lineWidth=26;if(alpha){ix.globalCompositeOperation='destination-out';ix.strokeStyle='#000';}else{ix.strokeStyle=bg;}ix.beginPath();ix.moveTo((last||p).x,(last||p).y);ix.lineTo(p.x,p.y);ix.stroke();ix.restore();last=p;draw();}
+ drag(cv,{down:p=>{last=null;erase(p);},move:erase,up:()=>{last=null;if(!alpha&&!told){say(st,'A Borracha pintou com a cor de fundo, porque a camada não tem canal alfa.','bad');told=true;}}});
+ const reset=h('button',{type:'button',class:'ui-btn',onclick:()=>{img=scene();ix=ctx2(img);alpha=false;told=false;tog.setAttribute('aria-pressed','false');tog.textContent='Adicionar canal alfa';nm.classList.add('bold');draw();say(st,'Imagem reposta, sem canal alfa.');}},'Repor');
+ draw();
+ return labFrame('Borracha e canal alfa','Camada > Transparência',stage,[h('h4',{},'Camadas'),li,h('h4',{},'Camada > Transparência'),tog,h('h4',{},'Cor de fundo'),bgIn,reset],st);
+}
+
+/* 12. Ajustes de cor */
+function adjustLab(cfg){
+ const src=scene({noise:14}),sd=ctx2(src).getImageData(0,0,SW,SH);
+ const cv=canvas(),x=cv.getContext('2d');
+ const st=status('');
+ const s={b:0,c:0,hue:0,sat:0,light:0,desat:false,inv:false,thr:false,t:127};
+ const R=(label,key,min,max)=>{const o=h('output',{},String(s[key]));const r=h('input',{type:'range',min,max,value:s[key],'aria-label':label});r.addEventListener('input',()=>{s[key]=+r.value;o.textContent=r.value;draw();});return h('label',{},h('span',{},label+': ',o),r);};
+ const T=(label,key,msg)=>{const b=h('button',{type:'button',class:'ui-btn','aria-pressed':'false',onclick:()=>{s[key]=!s[key];b.setAttribute('aria-pressed',String(s[key]));draw();if(s[key])say(st,msg,'good');else say(st,'Desligado.');}},label);return b;};
+ const panel=[];
+ const has=k=>cfg.controls.includes(k);
+ if(has('bc'))panel.push(h('h4',{},'Brilho-Contraste'),R('Brilho','b',-127,127),R('Contraste','c',-127,127));
+ if(has('hs'))panel.push(h('h4',{},'Matiz-Saturação'),R('Matiz','hue',-180,180),R('Saturação','sat',-100,100),R('Luminosidade','light',-100,100));
+ if(has('desat')||has('invert'))panel.push(h('h4',{},'Cores'),h('div',{class:'row'},has('desat')?T('Dessaturar','desat','Imagem em tons de cinzento.'):null,has('invert')?T('Inverter','inv','Cores invertidas, como um negativo.'):null));
+ if(has('threshold')){const tb=T('Aplicar Limiar','thr','Só preto e branco puro. Muda o valor para ver mais ou menos branco.');panel.push(h('h4',{},'Limiar'),tb,R('Valor','t',0,255));s.thr=true;tb.setAttribute('aria-pressed','true');}
+ let showOrig=false;
+ const orig=h('button',{type:'button',class:'ui-btn',onpointerdown:()=>{showOrig=true;draw();},onpointerup:()=>{showOrig=false;draw();},onpointerleave:()=>{if(showOrig){showOrig=false;draw();}},onkeydown:e=>{if(e.key===' '||e.key==='Enter'){showOrig=true;draw();}},onkeyup:()=>{showOrig=false;draw();}},'Manter carregado: ver original');
+ const reset=h('button',{type:'button',class:'ui-btn',onclick:()=>{Object.assign(s,{b:0,c:0,hue:0,sat:0,light:0,desat:false,inv:false,t:127,thr:has('threshold')});panelEl.querySelectorAll('input[type=range]').forEach(r=>{const k={Brilho:'b',Contraste:'c',Matiz:'hue',Saturação:'sat',Luminosidade:'light',Valor:'t'}[r.getAttribute('aria-label')];r.value=s[k];r.parentNode.querySelector('output').textContent=s[k];});panelEl.querySelectorAll('button[aria-pressed]').forEach(b=>b.setAttribute('aria-pressed',b.textContent==='Aplicar Limiar'?'true':'false'));draw();say(st,'Valores repostos.');}},'Repor');
+ panel.push(h('div',{class:'row'},orig,reset));
+ function hsl(r,g,b){const mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2;let hh=0,ss=0;if(mx!==mn){const d=mx-mn;ss=l>.5?d/(2-mx-mn):d/(mx+mn);hh=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4;hh/=6;}return[hh,ss,l];}
+ function rgb(hh,ss,l){if(!ss)return[l,l,l];const f=(p,q,t)=>{if(t<0)t+=1;if(t>1)t-=1;if(t<1/6)return p+(q-p)*6*t;if(t<1/2)return q;if(t<2/3)return p+(q-p)*(2/3-t)*6;return p;};const q=l<.5?l*(1+ss):l+ss-l*ss,p=2*l-q;return[f(p,q,hh+1/3),f(p,q,hh),f(p,q,hh-1/3)];}
+ function draw(){
+  if(showOrig){x.putImageData(sd,0,0);return;}
+  const d=new ImageData(new Uint8ClampedArray(sd.data),SW,SH),a=d.data;
+  const bb=s.b/127,cc=s.c/127,slant=Math.tan((cc+1)*Math.PI/4);
+  const hsOn=s.hue||s.sat||s.light;
+  for(let i=0;i<a.length;i+=4){
+   let r=a[i]/255,g=a[i+1]/255,b=a[i+2]/255;
+   if(s.desat){const v=r*.3+g*.59+b*.11;r=g=b=v;}
+   if(hsOn){let [hh,ss,l]=hsl(r,g,b);hh=(hh+s.hue/360+1)%1;ss=clamp(ss*(1+s.sat/100),0,1);const lf=s.light/100;l=lf<0?l*(1+lf):l+(1-l)*lf;[r,g,b]=rgb(hh,ss,l);}
+   if(s.b||s.c){const f=v=>{v=bb<0?v*(1+bb):v+(1-v)*bb;return(v-.5)*slant+.5;};r=f(r);g=f(g);b=f(b);}
+   if(s.inv){r=1-r;g=1-g;b=1-b;}
+   if(s.thr){const v=(r*.3+g*.59+b*.11)*255>=s.t?1:0;r=g=b=v;}
+   a[i]=r*255;a[i+1]=g*255;a[i+2]=b*255;
+  }
+  x.putImageData(d,0,0);
+ }
+ const lab=labFrame('Cores','Ajustes de cor',cv,panel,st);
+ const panelEl=lab.querySelector('.panel');
+ draw();say(st,has('bc')?'Mexe no brilho e no contraste. Mantém carregado o botão para comparar com o original.':has('hs')?'Roda a matiz e vê o céu mudar de cor. Leva a saturação ao mínimo.':has('threshold')?'Muda o valor do limiar.':'Liga e desliga cada ajuste.');
+ return lab;
+}
+
+/* 13. Pintura */
+function paintLab(cfg){
+ const tools=cfg.tools;let tool=tools[0];
+ const base=()=>cfg.base==='line'?scene({line:true}):cfg.base==='white'?(()=>{const c=canvas(SW,SH,null),x=ctx2(c);x.fillStyle='#fff';x.fillRect(0,0,SW,SH);return c;})():scene();
+ const cv=canvas(),x=ctx2(cv);x.drawImage(base(),0,0);
+ const ov=canvas(),ox=ov.getContext('2d');
+ const stack=h('div',{class:'stack checker'},cv,ov);
+ const st=status('');
+ let fg=cfg.fg||(cfg.base==='line'?'#e5484d':'#000000'),bg='#ffffff',size=cfg.base==='line'?6:8,last=null,lastEnd=null;
+ const fgIn=h('input',{type:'color',class:'fg',value:fg,'aria-label':'Cor de frente'});
+ const bgIn=h('input',{type:'color',class:'bg',value:bg,'aria-label':'Cor de fundo'});
+ fgIn.addEventListener('input',()=>fg=fgIn.value);bgIn.addEventListener('input',()=>bg=bgIn.value);
+ const sizeIn=h('input',{type:'range',min:1,max:40,value:size,'aria-label':'Tamanho'});const sizeOut=h('output',{},size);
+ sizeIn.addEventListener('input',()=>{size=+sizeIn.value;sizeOut.textContent=size;});
+ const tb={};
+ const strip=h('div',{class:'toolstrip'},tools.map(id=>tb[id]=toolButton(id,()=>setTool(id))));
+ const TIP={brush:'Pincel: traços de bordas suaves. Shift+clique faz uma linha reta desde o último ponto.',pencil:'Lápis: traços de bordas duras. Amplia mentalmente: não há meios-tons nas bordas.',eraser:'Borracha: apaga e deixa ver a transparência.',bucket:'Balde de tinta: clica dentro de uma zona fechada.',gradient:'Gradiente: arrasta. Vai da cor de frente para a cor de fundo.'};
+ function setTool(id){tool=id;tools.forEach(t=>tb[t].setAttribute('aria-pressed',String(t===id)));say(st,TIP[id]);}
+ // history
+ let hist=[{name:'Imagem original',d:x.getImageData(0,0,SW,SH)}],hi=0;
+ const hlist=h('ul',{class:'hist'});
+ function push(name){hist=hist.slice(0,hi+1);hist.push({name,d:x.getImageData(0,0,SW,SH)});if(hist.length>30)hist.shift();hi=hist.length-1;renderHist();}
+ function go(i){hi=clamp(i,0,hist.length-1);x.putImageData(hist[hi].d,0,0);renderHist();}
+ function renderHist(){if(!cfg.history)return;hlist.replaceChildren(...hist.map((s,i)=>h('li',{},h('button',{type:'button',class:i===hi?'cur':i>hi?'future':'',onclick:()=>{go(i);say(st,i<hist.length-1?'Voltaste ao passo «'+s.name+'». Os passos a cinzento podem ser refeitos.':'Estás no último passo.');}},s.name))));hlist.lastChild?.scrollIntoView?.({block:'nearest'});}
+ const NAMES={brush:'Pincel',pencil:'Lápis',eraser:'Borracha',bucket:'Balde de tinta',gradient:'Gradiente'};
+ function seg(a,b){
+  if(tool==='pencil'){x.fillStyle=fg;const n=Math.max(1,Math.ceil(Math.hypot(b.x-a.x,b.y-a.y)));for(let i=0;i<=n;i++){const px=Math.round(a.x+(b.x-a.x)*i/n-size/2),py=Math.round(a.y+(b.y-a.y)*i/n-size/2);x.fillRect(px,py,size,size);}return;}
+  x.save();x.lineCap='round';x.lineJoin='round';x.lineWidth=size;
+  if(tool==='eraser'){x.globalCompositeOperation='destination-out';x.strokeStyle='#000';}else x.strokeStyle=fg;
+  x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x+.01,b.y);x.stroke();x.restore();
+ }
+ function bucket(p){
+  const d=x.getImageData(0,0,SW,SH),a=d.data,px=clamp(Math.floor(p.x),0,SW-1),py=clamp(Math.floor(p.y),0,SH-1),s0=(py*SW+px)*4;
+  const sc=[a[s0],a[s0+1],a[s0+2],a[s0+3]],[r,g,b]=parseHex(fg);
+  if(sc[0]===r&&sc[1]===g&&sc[2]===b&&sc[3]===255)return;
+  const seen=new Uint8Array(SW*SH),stk=[py*SW+px];seen[stk[0]]=1;
+  const like=k=>Math.max(Math.abs(a[k]-sc[0]),Math.abs(a[k+1]-sc[1]),Math.abs(a[k+2]-sc[2]),Math.abs(a[k+3]-sc[3]))<=40;
+  while(stk.length){const i=stk.pop(),k=i*4;a[k]=r;a[k+1]=g;a[k+2]=b;a[k+3]=255;const xx=i%SW,yy=(i/SW)|0;
+   for(const n of [xx>0?i-1:-1,xx<SW-1?i+1:-1,yy>0?i-SW:-1,yy<SH-1?i+SW:-1])if(n>=0&&!seen[n]&&like(n*4)){seen[n]=1;stk.push(n);}}
+  x.putImageData(d,0,0);
+ }
+ let gstart=null;
+ drag(cv,{
+  down:(p,e)=>{
+   if(tool==='bucket'){bucket(p);push(NAMES.bucket);return;}
+   if(tool==='gradient'){gstart=p;return;}
+   if(e.shiftKey&&lastEnd){seg(lastEnd,p);lastEnd=p;push(NAMES[tool]+' (linha reta)');last=null;return;}
+   last=p;seg(p,p);
+  },
+  move:p=>{
+   if(tool==='gradient'&&gstart){ox.clearRect(0,0,SW,SH);ox.strokeStyle='#fff';ox.lineWidth=2;ox.beginPath();ox.moveTo(gstart.x,gstart.y);ox.lineTo(p.x,p.y);ox.stroke();ox.fillStyle='#fff';ox.beginPath();ox.arc(gstart.x,gstart.y,4,0,7);ox.arc(p.x,p.y,4,0,7);ox.fill();gstart.end=p;return;}
+   if(last){seg(last,p);last=p;}
+  },
+  up:p=>{
+   if(tool==='gradient'&&gstart){ox.clearRect(0,0,SW,SH);const e=gstart.end||p;if(Math.hypot(e.x-gstart.x,e.y-gstart.y)>3){const g=x.createLinearGradient(gstart.x,gstart.y,e.x,e.y);g.addColorStop(0,fg);g.addColorStop(1,bg);x.fillStyle=g;x.fillRect(0,0,SW,SH);push(NAMES.gradient);}gstart=null;return;}
+   if(last){lastEnd=last;last=null;push(NAMES[tool]);}
+  }
+ });
+ const reset=()=>{fg='#000000';bg='#ffffff';fgIn.value=fg;bgIn.value=bg;say(st,'D: cor de frente preta e cor de fundo branca.');};
+ const swap=()=>{[fg,bg]=[bg,fg];fgIn.value=fg;bgIn.value=bg;say(st,'X: trocaste a cor de frente com a de fundo.');};
+ const colors=h('div',{class:'colors'},fgIn,bgIn);
+ const panel=[h('h4',{},'Ferramentas'),strip,h('h4',{},'Cores'),h('div',{class:'row',style:'gap:12px'},colors,h('div',{style:'display:grid;gap:4px'},h('button',{type:'button',class:'ui-btn',onclick:reset},'D: repor'),h('button',{type:'button',class:'ui-btn',onclick:swap},'X: trocar'))),
+  h('label',{},h('span',{},'Tamanho: ',sizeOut),sizeIn),
+  h('div',{class:'row'},h('button',{type:'button',class:'ui-btn',onclick:()=>{if(hi>0){go(hi-1);say(st,'Desfeito (Ctrl+Z).');}}},'Desfazer'),h('button',{type:'button',class:'ui-btn',onclick:()=>{if(hi<hist.length-1){go(hi+1);say(st,'Refeito (Ctrl+Y).');}}},'Refazer'),h('button',{type:'button',class:'ui-btn',onclick:()=>{x.clearRect(0,0,SW,SH);x.drawImage(base(),0,0);push('Repor imagem');}},'Repor')),
+  cfg.history?h('h4',{},'Histórico de desfazer'):null,cfg.history?hlist:null];
+ const lab=labFrame('Pintura','Clica no laboratório para usar o teclado',stack,panel,st);
+ keys(lab,k=>{
+  if(k==='D'){reset();return true;}if(k==='X'){swap();return true;}
+  if(k==='Ctrl+Z'){if(hi>0)go(hi-1);return true;}
+  if(k==='Ctrl+Y'||k==='Shift+Ctrl+Z'){if(hi<hist.length-1)go(hi+1);return true;}
+  if(k==='['||k==='Shift+['){size=clamp(size-2,1,40);sizeIn.value=size;sizeOut.textContent=size;return true;}
+  if(k===']'||k==='Shift+]'){size=clamp(size+2,1,40);sizeIn.value=size;sizeOut.textContent=size;return true;}
+  const t=tools.find(id=>TOOLS[id][1]===k);if(t){setTool(t);return true;}
+  return false;
+ });
+ setTool(tool);renderHist();
+ if(cfg.history)say(st,'Pinta três ou quatro traços. Depois clica nos passos do histórico ou usa Ctrl+Z e Ctrl+Y.');
+ return lab;
+}
+
+/* 14. Texto */
+function textLab(){
+ const bgc=scene();
+ const cv=canvas(),x=cv.getContext('2d');
+ const st=status('Clica num espaço vazio da imagem para criar um texto novo. Arrasta um texto para o mudar de sítio.');
+ const FONTS=[['Sans-serif','700 {s}px "Bricolage Grotesque", sans-serif'],['Serif','700 {s}px Georgia, serif'],['Mono','700 {s}px ui-monospace, monospace'],['Manuscrita','700 {s}px "Comic Sans MS", "Segoe Print", cursive']];
+ let texts=[{t:'Olá!',s:40,c:'#ffffff',f:0,x:22,y:20}],active=0;
+ const tIn=h('input',{type:'text','aria-label':'Texto',value:'Olá!'});
+ const sIn=h('input',{type:'range',min:10,max:80,value:40,'aria-label':'Tamanho do texto'});const sOut=h('output',{},'40');
+ const cIn=h('input',{type:'color',value:'#ffffff','aria-label':'Cor do texto',style:'width:44px;height:30px;padding:0;border:1px solid #111;background:none'});
+ const fSel=h('select',{'aria-label':'Tipo de letra'},FONTS.map((f,i)=>h('option',{value:i},f[0])));
+ const list=h('ul',{class:'layers'});
+ const font=t=>FONTS[t.f][1].replace('{s}',t.s);
+ function box(t){x.font=font(t);const w=x.measureText(t.t||' ').width;return{x:t.x,y:t.y,w,h:t.s*1.15};}
+ function draw(){
+  x.clearRect(0,0,SW,SH);x.drawImage(bgc,0,0);
+  texts.forEach((t,i)=>{x.font=font(t);x.textBaseline='top';x.fillStyle=t.c;x.lineJoin='round';x.lineWidth=Math.max(2,t.s/9);x.strokeStyle='rgba(20,24,34,.55)';x.strokeText(t.t,t.x,t.y);x.fillText(t.t,t.x,t.y);
+   if(i===active){const b=box(t);x.save();x.setLineDash([4,3]);x.strokeStyle='#fff';x.lineWidth=1;x.strokeRect(b.x-3,b.y-3,b.w+6,b.h+6);x.restore();}});
+  list.replaceChildren(...[...texts.map((t,i)=>({n:t.t||'(vazio)',i,c:true})),{n:'Fundo',i:-1}].map(l=>{const th=canvas(72,48,null);const tx=th.getContext('2d');if(l.i<0)tx.drawImage(bgc,0,0,72,48);else{tx.fillStyle=texts[l.i].c;tx.font='700 20px sans-serif';tx.fillText('T',28,32);}return h('li',{class:l.i===active?'on':'',onclick:()=>{if(l.i>=0){active=l.i;sync();draw();}}},h('span',{class:'eye'},icon('eye')),th,h('span',{class:'nm'},l.n));}));
+ }
+ function sync(){const t=texts[active];if(!t)return;tIn.value=t.t;sIn.value=t.s;sOut.textContent=t.s;cIn.value=t.c;fSel.value=t.f;}
+ tIn.addEventListener('input',()=>{if(texts[active]){texts[active].t=tIn.value;draw();}});
+ sIn.addEventListener('input',()=>{if(texts[active]){texts[active].s=+sIn.value;sOut.textContent=sIn.value;draw();}});
+ cIn.addEventListener('input',()=>{if(texts[active]){texts[active].c=cIn.value;draw();}});
+ fSel.addEventListener('change',()=>{if(texts[active]){texts[active].f=+fSel.value;draw();}});
+ let grab=null;
+ drag(cv,{down:p=>{
+   for(let i=texts.length-1;i>=0;i--){const b=box(texts[i]);if(p.x>=b.x-4&&p.x<=b.x+b.w+4&&p.y>=b.y-4&&p.y<=b.y+b.h+4){active=i;grab={dx:p.x-texts[i].x,dy:p.y-texts[i].y};sync();draw();return;}}
+   texts.push({t:'Texto',s:28,c:'#ffd23f',f:0,x:Math.round(p.x),y:Math.round(p.y)});active=texts.length-1;grab=null;sync();draw();
+   say(st,'Criaste uma camada de texto nova. Escreve no campo Texto para a mudar.','good');tIn.focus();tIn.select();
+  },move:p=>{if(grab){const t=texts[active];t.x=Math.round(p.x-grab.dx);t.y=Math.round(p.y-grab.dy);draw();}},up:()=>{if(grab)say(st,'Mudaste o texto de sítio, como faz a ferramenta Mover.');grab=null;}});
+ const del=h('button',{type:'button',class:'ui-btn',onclick:()=>{if(!texts.length)return;texts.splice(active,1);active=Math.max(0,texts.length-1);sync();draw();say(st,'Apagaste a camada de texto.');}},'Apagar camada');
+ draw();
+ return labFrame('Ferramenta Texto','Cada texto é uma camada',cv,[h('h4',{},'Texto ativo'),h('label',{},'Texto',tIn),h('label',{},'Tipo de letra',fSel),h('label',{},h('span',{},'Tamanho: ',sOut),sIn),h('div',{class:'row'},cIn,h('span',{},'Cor')),h('h4',{},'Camadas'),list,del],st);
+}
+
+/* 15. Filtros */
+function filterLab(){
+ let src=scene();
+ const cv=canvas(),x=ctx2(cv);
+ const st=status('Arrasta à volta do número da porta (à esquerda da casa) e aplica Pixelizar.');
+ let f='pix',amt=8,zone=null,start=null;
+ const fb={};
+ const FN=[['pix','Pixelizar'],['blur','Desfocagem gaussiana']];
+ const aIn=h('input',{type:'range',min:1,max:30,value:amt,'aria-label':'Intensidade'});const aOut=h('output',{},amt);const aLbl=h('span',{},'Tamanho do bloco: ');
+ aIn.addEventListener('input',()=>{amt=+aIn.value;aOut.textContent=amt;draw();});
+ const seg=h('div',{class:'row'},FN.map(([k,n])=>fb[k]=h('button',{type:'button',class:'ui-btn','aria-pressed':String(k===f),onclick:()=>{f=k;FN.forEach(([m])=>fb[m].setAttribute('aria-pressed',String(m===k)));aLbl.textContent=k==='pix'?'Tamanho do bloco: ':'Raio: ';draw();}},n)));
+ function blur(d,r){
+  const a=d.data,tmp=new Float32Array(a.length);
+  const pass=(inA,outA,dx,dy)=>{for(let y=0;y<SH;y++)for(let x0=0;x0<SW;x0++){let s0=0,s1=0,s2=0,s3=0,n=0;for(let k=-r;k<=r;k++){const xx=clamp(x0+k*dx,0,SW-1),yy=clamp(y+k*dy,0,SH-1),i=(yy*SW+xx)*4;s0+=inA[i];s1+=inA[i+1];s2+=inA[i+2];s3+=inA[i+3];n++;}const o=(y*SW+x0)*4;outA[o]=s0/n;outA[o+1]=s1/n;outA[o+2]=s2/n;outA[o+3]=s3/n;}};
+  let cur=a;for(let t=0;t<2;t++){pass(cur,tmp,1,0);pass(tmp,a,0,1);cur=a;}
+ }
+ function render(){
+  const Z=zone&&zone.w>3&&zone.h>3?zone:{x:0,y:0,w:SW,h:SH};
+  const d=ctx2(src).getImageData(0,0,SW,SH);const out=new ImageData(new Uint8ClampedArray(d.data),SW,SH);
+  if(f==='blur'){const r=Math.max(1,Math.round(amt/2));blur(out,r);}
+  else{const b=Math.max(1,amt),a=out.data;for(let by=Z.y;by<Z.y+Z.h;by+=b)for(let bx=Z.x;bx<Z.x+Z.w;bx+=b){let s=[0,0,0,0],n=0;for(let y=by;y<Math.min(by+b,Z.y+Z.h);y++)for(let x0=bx;x0<Math.min(bx+b,Z.x+Z.w);x0++){const i=(y*SW+x0)*4;for(let c=0;c<4;c++)s[c]+=a[i+c];n++;}for(let y=by;y<Math.min(by+b,Z.y+Z.h);y++)for(let x0=bx;x0<Math.min(bx+b,Z.x+Z.w);x0++){const i=(y*SW+x0)*4;for(let c=0;c<4;c++)a[i+c]=s[c]/n;}}}
+  // copy back only the zone
+  const res=new ImageData(new Uint8ClampedArray(d.data),SW,SH);
+  for(let y=Z.y;y<Z.y+Z.h;y++)for(let x0=Z.x;x0<Z.x+Z.w;x0++){const i=(y*SW+x0)*4;for(let c=0;c<4;c++)res.data[i+c]=out.data[i+c];}
+  return res;
+ }
+ let preview=null;
+ function draw(){preview=render();x.putImageData(preview,0,0);if(zone&&zone.w>3&&zone.h>3){x.save();x.setLineDash([4,3]);x.strokeStyle='#fff';x.strokeRect(zone.x+.5,zone.y+.5,zone.w-1,zone.h-1);x.strokeStyle='#000';x.lineDashOffset=3.5;x.strokeRect(zone.x+.5,zone.y+.5,zone.w-1,zone.h-1);x.restore();}}
+ drag(cv,{down:p=>{start=p;zone=null;},move:p=>{zone={x:Math.round(clamp(Math.min(start.x,p.x),0,SW)),y:Math.round(clamp(Math.min(start.y,p.y),0,SH)),w:Math.round(Math.abs(p.x-start.x)),h:Math.round(Math.abs(p.y-start.y))};zone.w=Math.min(zone.w,SW-zone.x);zone.h=Math.min(zone.h,SH-zone.y);draw();},
+  up:()=>{if(zone&&zone.w>3&&zone.h>3)say(st,'O filtro só se aplica dentro da zona. Ajusta a intensidade e carrega em Aplicar.');else{zone=null;draw();say(st,'Sem zona: o filtro aplica-se à imagem toda.');}}});
+ const apply=h('button',{type:'button',class:'ui-btn go',onclick:()=>{if(!preview)return;const c=canvas(SW,SH,null);ctx2(c).putImageData(preview,0,0);src=c;zone=null;draw();say(st,'Filtro aplicado. Podes aplicar outro por cima.','good');}},'Aplicar');
+ const reset=h('button',{type:'button',class:'ui-btn',onclick:()=>{src=scene();zone=null;draw();say(st,'Imagem reposta.');}},'Repor');
+ const all=h('button',{type:'button',class:'ui-btn',onclick:()=>{zone=null;draw();say(st,'Sem zona: o filtro aplica-se à imagem toda.');}},'Imagem toda');
+ // start with a zone on the door number to show the idea
+ zone={x:58,y:134,w:32,h:25};
+ draw();
+ return labFrame('Filtros','Arrasta para escolher a zona',cv,[h('h4',{},'Filtro'),seg,h('label',{},h('span',{},aLbl,aOut),aIn),h('div',{class:'row'},apply,all,reset)],st);
+}
+
+const LABS={interface:interfaceLab,shortcuts:shortcutsLab,formats:formatsLab,zoom:zoomLab,rgb:rgbLab,scale:scaleLab,crop:cropLab,transform:transformLab,select:selectLab,layers:layersLab,alpha:alphaLab,adjust:adjustLab,paint:paintLab,text:textLab,filter:filterLab};
+
+/* ===================== PÁGINAS ===================== */
+function heroDemo(){
+ const stage=h('div',{class:'rgb-stage'},h('span',{class:'r'}),h('span',{class:'g'}),h('span',{class:'b'}));
+ const L=[['Vermelho','r'],['Verde','g'],['Azul','b']];
+ const list=h('ul',{class:'layers'},L.map(([n,k])=>{const eye=h('button',{type:'button',class:'eye','aria-pressed':'true','aria-label':'Mostrar ou esconder a camada '+n,onclick:()=>{const s=stage.querySelector('.'+k);const off=s.classList.toggle('off');eye.setAttribute('aria-pressed',String(!off));}},icon('eye'));return h('li',{},eye,h('span',{class:'nm'},n));}));
+ return h('div',{class:'rgb'},stage,h('div',{class:'rgb-panel'},h('p',{},'Camadas em modo Ecrã'),list,h('p',{class:'note'},'Esconde e mostra cada camada. Onde as três se juntam, a luz fica branca.')));
+}
+function home(){
+ const total=chapters.reduce((s,c)=>s+c.quizzes.length,0);
+ const hero=h('section',{class:'hero'},h('div',{},h('h1',{},'LabDigital do Prof. João'),h('p',{class:'sub'},'Edição de imagem com o GIMP'),h('p',{class:'intro'},'Aprende como funciona cada ferramenta, experimenta-a aqui mesmo e depois faz o desafio no GIMP. No fim de cada capítulo, testa o que aprendeste.'),h('div',{class:'actions'},navlink(hash(0),'Começar pelo capítulo 1','btn primary'))),heroDemo());
+ const grid=h('div',{class:'grid'},chapters.map((c,i)=>h('a',{class:'card',href:hash(i)},h('span',{class:'n'},num(i)),h('h3',{},c.title),h('p',{},c.desc))));
+ app.append(hero,h('div',{class:'home-title'},h('h2',{},'Capítulos'),h('span',{},chapters.length+' capítulos e '+total+' perguntas')),grid);
+}
+function sidebar(i){return h('nav',{class:'side','aria-label':'Capítulos'},navlink('#inicio','Índice','home-link'),chapters.map((c,j)=>h('a',{href:hash(j),...(i===j?{'aria-current':'page'}:{})},h('span',{},num(j)),c.title)));}
+function reference(t){
+ const r=t.ref;if(!r)return null;
+ const table=r.headers?h('div',{class:'theory-table'},h('table',{'aria-label':t.title},h('thead',{},h('tr',{},r.headers.map(x=>h('th',{scope:'col'},x)))),h('tbody',{},r.rows.map(row=>h('tr',{},row.map((cell,i)=>h('td',{},r.code.includes(i)?kbdify(cell):cell))))))):null;
+ return h('div',{class:'reference'},r.note?h('p',{class:'theory-note'},r.note):null,table);
+}
+function kbdify(s){const out=[];s.split(' / ').forEach((part,i)=>{if(i)out.push(' / ');const m=/^(.*?)( \(.*\))?$/.exec(part);out.push(h('kbd',{},m[1]));if(m[2])out.push(m[2]);});return out;}
+function practice(c,i){
+ const sec=h('section',{class:'practice',id:'aplicacoes'},h('div',{class:'practice-head'},h('div',{},h('h2',{},'Aplicações diretas'),h('p',{class:'subtle'},'Escolhe uma resposta e confirma.'))));
+ c.quizzes.forEach((q,j)=>{
+  const key=i+'-'+j;
+  const fbk=h('p',{class:'feedback','aria-live':'polite'});
+  const radios=q.options.map((o,k)=>{const inp=h('input',{type:'radio',name:'q'+key,value:k,required:''});if(saved[key]===k)inp.checked=true;return h('label',{},inp,o);});
+  const check=k=>{fbk.className='feedback '+(k===q.correct?'ok':'retry');fbk.textContent=(k===q.correct?'Certo. ':'Ainda não. ')+q.why;};
+  const form=h('form',{class:'quiz',onsubmit:e=>{e.preventDefault();const k=Number(new FormData(form).get('q'+key));saved[key]=k;check(k);}},h('fieldset',{},h('legend',{},(j+1)+'. '+q.q),h('div',{class:'choices'},radios)),h('button',{type:'submit',class:'btn primary'},'Verificar resposta'),fbk);
+  if(key in saved)check(saved[key]);
+  sec.append(form);
+ });
+ return sec;
+}
+function chapter(i){
+ const c=chapters[i];
+ const mobile=h('select',{class:'mobile-nav','aria-label':'Ir para um capítulo',onchange:e=>{location.hash=e.target.value;}},h('option',{value:'#inicio'},'Índice de capítulos'),chapters.map((x,j)=>h('option',{value:hash(j)},num(j)+'. '+x.title)));
+ mobile.value=hash(i);
+ const jump=id=>document.getElementById(id)?.scrollIntoView({block:'start'});
+ const toc=h('nav',{class:'toc','aria-label':'Nesta página'},c.topics.map((t,j)=>h('button',{type:'button',onclick:()=>jump('topico-'+j)},t.title)),h('button',{type:'button',onclick:()=>jump('desafio')},'Desafio no GIMP'),h('button',{type:'button',onclick:()=>jump('aplicacoes')},'Aplicações diretas'));
+ const topics=c.topics.map((t,j)=>{let lab=null;try{lab=t.lab?LABS[t.lab](t.cfg||{}):null;}catch(err){console.error(err);lab=h('p',{class:'theory-note'},'Não foi possível abrir este laboratório neste navegador.');}
+  return h('section',{id:'topico-'+j,class:'topic'},h('h2',{},t.title),h('p',{},t.theory),t.path?h('span',{class:'path'},t.path):null,reference(t),lab);});
+ const challenge=h('section',{class:'challenge',id:'desafio'},h('h2',{},'Desafio no GIMP'),h('p',{class:'subtle'},'Agora no programa a sério. Segue os passos pela ordem.'),h('ol',{},c.challenge.map(s=>h('li',{},s))));
+ const last=chapters.length-1;
+ const content=h('div',{},mobile,h('header',{class:'chapter-head'},h('p',{class:'chapter-no'},'Capítulo '+(i+1)+' de '+chapters.length),h('h1',{},c.title),h('p',{class:'subtle'},c.desc),toc),topics,challenge,practice(c,i),
+  h('nav',{class:'chapter-nav','aria-label':'Avançar ou recuar'},i===0?navlink('#inicio','Índice'):navlink(hash(i-1),'Capítulo anterior'),i===last?navlink('#inicio','Voltar ao índice','btn primary'):navlink(hash(i+1),'Capítulo seguinte','btn primary')));
+ app.append(h('div',{class:'layout'},sidebar(i),content));
+}
+function render(){
+ cleanups.forEach(f=>{try{f();}catch{}});cleanups=[];
+ app.replaceChildren();
+ const m=/^#capitulo-(\d+)$/.exec(location.hash);
+ const n=m?Number(m[1])-1:-1;
+ if(n>=0&&n<chapters.length)chapter(n);else home();
+ window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',render);
+render();
+</script>
+</body>
+</html>
